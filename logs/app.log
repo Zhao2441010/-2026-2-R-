@@ -1,0 +1,7 @@
+2026-03-30T21:54:08.072+08:00  INFO 15116 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Starting DemoApplication using Java 21.0.10 with PID 15116 (D:\my rubbish\1 homework\1 now\ruangong\-2026-2-R-\demo\target\classes started by Zhao in D:\my rubbish\1 homework\1 now\ruangong\-2026-2-R-)
+2026-03-30T21:54:08.079+08:00 DEBUG 15116 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T21:54:08.081+08:00  INFO 15116 --- [demo] [restartedMain] com.example.demo.DemoApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-03-30T21:54:12.730+08:00  INFO 15116 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Started DemoApplication in 5.29 seconds (process running for 6.059)
+2026-03-30T22:13:33.177+08:00  INFO 16288 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Starting DemoApplication using Java 21.0.10 with PID 16288 (D:\my rubbish\1 homework\1 now\ruangong\-2026-2-R-\demo\target\classes started by Zhao in D:\my rubbish\1 homework\1 now\ruangong\-2026-2-R-)
+2026-03-30T22:13:33.185+08:00 DEBUG 16288 --- [demo] [restartedMain] com.example.demo.DemoApplication         : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T22:13:33.186+08:00  INFO 16288 --- [demo] [restartedMain] com.example.demo.DemoApplication         : No active profile set, falling back to 1 default profile: "default"

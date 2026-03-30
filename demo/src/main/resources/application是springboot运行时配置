@@ -1,0 +1,54 @@
+# ============================================
+# Spring Boot 应用配置 (application.yml)
+# ============================================
+
+# 服务器配置
+server:
+  port: 8080                    # 服务端口
+  servlet:
+    context-path: /api          # 全局上下文路径
+
+# Spring 相关配置
+spring:
+  # 应用名称
+  application:
+    name: my-service
+  
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb?useSSL=false
+    username: root
+    password: ${DB_PASSWORD}    # 可从环境变量读取
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20     # 连接池配置
+  
+  # JPA/Hibernate 配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  
+  # Redis 配置
+  redis:
+    host: localhost
+    port: 6379
+    password: ${REDIS_PASSWORD}
+    timeout: 5000ms
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG          # 指定包日志级别
+  file:
+    name: logs/application.log
+
+# 自定义业务配置
+app:
+  jwt:
+    secret: mySecretKey
+    expiration: 86400000        # 24小时（毫秒）
+  upload:
+    max-file-size: 10MB
+    allowed-types: jpg,png,pdf

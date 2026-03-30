@@ -1,0 +1,22 @@
+2026-03-30T21:41:55.654+08:00  INFO 20996 --- [demo] [main] com.example.demo.service.Mytest          : Starting Mytest using Java 24.0.2 with PID 20996 (started by Zhao in D:\my rubbish\1 homework\1 now\软件工程\-2026-2-R-\demo)
+2026-03-30T21:41:55.660+08:00 DEBUG 20996 --- [demo] [main] com.example.demo.service.Mytest          : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T21:41:55.662+08:00  INFO 20996 --- [demo] [main] com.example.demo.service.Mytest          : No active profile set, falling back to 1 default profile: "default"
+2026-03-30T21:43:09.534+08:00  INFO 27140 --- [demo] [main] com.example.demo.service.Mytest          : Starting Mytest using Java 24.0.2 with PID 27140 (started by Zhao in D:\my rubbish\1 homework\1 now\软件工程\-2026-2-R-\demo)
+2026-03-30T21:43:09.543+08:00 DEBUG 27140 --- [demo] [main] com.example.demo.service.Mytest          : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T21:43:09.544+08:00  INFO 27140 --- [demo] [main] com.example.demo.service.Mytest          : No active profile set, falling back to 1 default profile: "default"
+2026-03-30T21:43:13.611+08:00  INFO 27140 --- [demo] [main] com.example.demo.service.Mytest          : Started Mytest in 4.589 seconds (process running for 5.731)
+2026-03-30T21:45:35.626+08:00  INFO 26188 --- [demo] [main] com.example.demo.service.Mytest          : Starting Mytest using Java 24.0.2 with PID 26188 (started by Zhao in D:\my rubbish\1 homework\1 now\软件工程\-2026-2-R-\demo)
+2026-03-30T21:45:35.631+08:00 DEBUG 26188 --- [demo] [main] com.example.demo.service.Mytest          : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T21:45:35.632+08:00  INFO 26188 --- [demo] [main] com.example.demo.service.Mytest          : No active profile set, falling back to 1 default profile: "default"
+2026-03-30T21:45:39.719+08:00  INFO 26188 --- [demo] [main] com.example.demo.service.Mytest          : Started Mytest in 4.58 seconds (process running for 5.72)
+2026-03-30T22:12:17.335+08:00  INFO 23536 --- [demo] [main] com.example.demo.service.Mytest          : Starting Mytest using Java 24.0.2 with PID 23536 (started by Zhao in D:\my rubbish\1 homework\1 now\ruangong\-2026-2-R-\demo)
+2026-03-30T22:12:17.347+08:00 DEBUG 23536 --- [demo] [main] com.example.demo.service.Mytest          : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T22:12:17.348+08:00  INFO 23536 --- [demo] [main] com.example.demo.service.Mytest          : No active profile set, falling back to 1 default profile: "default"
+2026-03-30T22:12:20.818+08:00 DEBUG 23536 --- [demo] [main] org.hibernate.SQL                        : 
+    alter table person 
+       add column username varchar(255)
+2026-03-30T22:12:21.623+08:00  INFO 23536 --- [demo] [main] com.example.demo.service.Mytest          : Started Mytest in 4.73 seconds (process running for 5.87)
+2026-03-30T22:13:50.606+08:00  INFO 18408 --- [demo] [main] com.example.demo.service.Mytest          : Starting Mytest using Java 24.0.2 with PID 18408 (started by Zhao in D:\my rubbish\1 homework\1 now\ruangong\-2026-2-R-\demo)
+2026-03-30T22:13:50.611+08:00 DEBUG 18408 --- [demo] [main] com.example.demo.service.Mytest          : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-03-30T22:13:50.612+08:00  INFO 18408 --- [demo] [main] com.example.demo.service.Mytest          : No active profile set, falling back to 1 default profile: "default"
+2026-03-30T22:13:55.149+08:00  INFO 18408 --- [demo] [main] com.example.demo.service.Mytest          : Started Mytest in 5.072 seconds (process running for 6.462)
