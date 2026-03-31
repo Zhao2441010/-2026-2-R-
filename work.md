@@ -34,3 +34,23 @@
 
 
 数据库:
+
+User/Admin/Volunteer:
+    id(Long),password,username,realname,gender,age(int),phonenumber,address
+Message:
+    id userid content
+
+Cat:
+    id(Long),name,age(int),type,health,jueyu(bool),adoped(bool),feed(bool)
+Adopt:
+    (uid,cid),adopt_date,process
+Health:
+    id,catid,health,date,hospitol
+Picture:
+    id,catid,url,accept(bool)
+Place
+    id,catid,place
+ 
+
+Log:
+    id,catid,user_id,submitdate,solvedate,description,process

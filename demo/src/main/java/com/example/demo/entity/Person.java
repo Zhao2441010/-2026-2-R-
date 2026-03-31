@@ -23,7 +23,8 @@ public abstract class Person {
     @Column(name="password",nullable = false,length = 255) //指定对应数据库表中的列名为password
     private String password; //密码字段，类型为String，不能为空，长度最大为255
 
-
+    @Column(name = "username",nullable = false,length=255)
+    private String username; //用户名字段，类型为String，不能为空，长度最大为255
     
     @Column(name = "realname",nullable=true) //指定对应数据库表中的列名为name
     private String realname; //姓名字段，类型为String
@@ -37,7 +38,7 @@ public abstract class Person {
     private int age; //年龄字段，类型为int
 
 
-    @Column(name = "phone_number",nullable = true,unique=true,length=20) //指定对应数据库表中的列名为phone_number
+    @Column(name = "phone_number",nullable = false,unique=true,length=20) //指定对应数据库表中的列名为phone_number
     //指定不能为空,也不能重复
     private String phoneNumber; //电话号码字段，类型为String
 
@@ -53,8 +54,8 @@ public abstract class Person {
     protected Person() {
     }
 
-    public Person(String password,String realname, String gender, int age, String phoneNumber, String address) {
-        this.password = password;
+    public Person( String username, String realname, String gender, int age, String phoneNumber, String address) {
+        this.username = username;
         this.realname = realname;
         this.gender = gender;
         this.age = age;
@@ -64,6 +65,14 @@ public abstract class Person {
 
     public Long getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getRealname() {

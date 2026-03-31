@@ -8,19 +8,15 @@ import jakarta.persistence.*;
 
 public class User extends Person{
 
-    @Column(name = "username")
-    private String username;
-
     protected User() {
     }
 
-    public User(String password,String username,String realname, String gender, int age, String phoneNumber, String address) {
-        super(password,realname, gender, age, phoneNumber, address);
-        this.username = username;
+    public User(String username, String realname, String gender, int age, String phoneNumber, String address) {
+        super(username, realname, gender, age, phoneNumber, address);
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        super.setUsername(username);
     }
 
     @Override
@@ -39,7 +35,7 @@ public class User extends Person{
     }
 
     public String getUsername() {
-        return username;
+        return super.getUsername();
     }
 
     @Override
