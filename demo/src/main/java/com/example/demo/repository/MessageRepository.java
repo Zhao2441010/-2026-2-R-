@@ -14,5 +14,17 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("delete from Message m where m.id = :id")
     void deleteById(@Param("id") Long id);
 
+    @Query("select m from Message m where m.userId = :receiverId order by m.time DESC")
+    java.util.List<Message> findAllByReceiverId(@Param("receiverId") Long receiverId);
+
+
+    @Query("select m from Message m where m.userId = :receiverId and m.seen=false order by m.time DESC")
+    java.util.List<Message> findUnseenByReceiverId(@Param("receiverId") Long receiverId);
+
+    @Query("select count(m) from Message m where m.userId = :receiverId and m.seen=false")
+    int countUncheckMessage(@Param("receiverId") Long receiverId);
+
+    @Query("select count(m) from Message m where m.userId = :receiverId")
+    int countAllMessage(@Param("receiverId") Long receiverId);
 
 }

@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
@@ -9,29 +11,37 @@ import jakarta.persistence.*;
 
 
 public class Cat {
-    
+
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter@Setter
     @Column(name = "name",nullable = false,length = 255)
     private String name;
 
+    @Getter@Setter
     @Column(name = "age")
     private int age;
 
-    @Column(name = "type",length = 255)
+    @Getter
+    @Column(name = "type")
     private String type;
 
+    @Getter@Setter
     @Column(name="health")
     private String health;
 
+    @Setter @Getter
     @Column(name = "jueyu",length = 255)
     private Boolean jueyu;
 
+    @Getter@Setter
     @Column(name ="adopted")
     private Boolean adopted;
 
+    @Getter@Setter
     @Column(name = "fed")
     private Boolean feed;
 
@@ -53,56 +63,6 @@ public class Cat {
         this.adopted = adopted;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getHealth() {
-        return health;
-    }
-
-    public Boolean getJueyu() {
-        return jueyu;
-    }
-
-    public Boolean getAdopted() {
-        return adopted;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setHealth(String health) {
-        this.health = health;
-    }
-
-    public void setJueyu(Boolean jueyu) {
-        this.jueyu = jueyu;
-    }
-
-    public void setAdopted(Boolean adopted) {
-        this.adopted = adopted;
-    }
-
-    public void feed() {
-        feed=true;
-    }
 
 }

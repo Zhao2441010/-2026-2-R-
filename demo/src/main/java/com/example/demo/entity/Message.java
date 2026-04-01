@@ -1,50 +1,49 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "message")
 public class Message {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
+    @Getter
     @Column(name = "user_id")
     private Long userId;
 
-
-    @Column(name = "content", length = 255)
+    @Getter
+    @Column(name = "content")
     private String content;
+
+    @Getter
+    @Column(name="time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date time;
+
+    @Getter
+    @Setter
+    @Column(name="seen")
+    private Boolean seen;
 
     protected Message() {
     }
 
-    public Message( Long userId, String content) {
+    public Message( Long userId, String content, Date time) {
         this.userId = userId;
         this.content = content;
+        this.time = time;
+        this.seen = false;
+
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Long setUserId(Long userId) {
-        this.userId = userId;
-        return userId;
-    }
-
-    public String setContent(String content) {
-        this.content = content;
-        return content;
-    }
 
 }

@@ -1,26 +1,32 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "health")
 public class Health {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @Getter
     @Column(name = "cat_id")
     private Long catId;
 
+    @Getter@Setter
     @Column(name = "health_status")
     private String healthStatus;
 
+    @Getter@Setter
     @Column(name = "check_date")
     @Temporal(TemporalType.DATE)
     private java.util.Date checkDate;
 
-    @Column(name="hospital",length = 255)
+    @Getter@Setter
+    @Column(name="hospital")
     private String hospital;
 
     protected Health() {

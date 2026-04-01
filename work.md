@@ -52,5 +52,11 @@ Place
     id,catid,place
  
 
+Task:
+    id,description,need,have,eventdate
+
+UTask:
+    id,uid,taskid,process
+
 Log:
     id,catid,user_id,submitdate,solvedate,description,process

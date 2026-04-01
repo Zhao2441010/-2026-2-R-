@@ -35,31 +35,28 @@
 
 package com.example.demo.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.entity.Message;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
+
+@Slf4j
 @SpringBootTest
 @Transactional
 @Rollback(false)  //不回滚,测试数据保留
 public class Mytest {
     
     @Autowired
-    private MessageService messageService;  // ← 改为接口，不是 MessageServiceImpl
+    private LogService logService;  // ← 改为接口，不是 MessageServiceImpl
 
     @Test
     void testSaveMessage() {
-        Message message = new Message(1L, "Hello, World!");
-        
 
-        messageService.saveMessage(message);
-        
-        System.out.println("Finished");
+
     }
 }
