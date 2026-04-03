@@ -15,17 +15,14 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Modifying
     public void deleteById(Long id);
 
+    @Query("select count (tu) from TU tu where tu.taskId=:id")
+    public int getHaveVolunteerById(
+            @Param("id") Long id
+    );
+
     @Modifying
     @Query("update Task t set t.eventdate = :eventdate where t.Id = :id")
     public void updateEventdateById(Long id, Date eventdate);
-
-    @Modifying
-    @Query("update Task t set t.have = t.have+1 where t.Id = :id")
-    void volunteerRegister(Long id);
-
-    @Modifying
-    @Query("update Task t set t.have = t.have-1 where t.Id = :id")
-    void volunteerUnregister(Long id);
 
 
     public List<Task> findByEventdate(Date today);

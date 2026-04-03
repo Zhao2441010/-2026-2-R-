@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
+
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -17,27 +17,26 @@ public class TaskServiceImpl implements TaskService {
         this.taskRepository = taskRepository;
     }
 
+
+    public int getVolunteernums(Long tid) {
+        return taskRepository.getHaveVolunteerById(tid);
+    }
+
+
     @Override
+    @Transactional
     public void addTask(String description, Date eventDate,Long need) {
         taskRepository.save(new Task(description, eventDate,need));
     }
 
     @Override
+    @Transactional
     public void updateEvemtTime(Long id, Date newDate) {
         taskRepository.updateEventdateById(id, newDate);
     }
 
     @Override
-    public void volunteerRegister(Long id) {
-        taskRepository.volunteerRegister(id);
-    }
-
-    @Override
-    public void volunteerUnRegister(Long id) {
-        taskRepository.volunteerUnregister(id);
-    }
-
-    @Override
+    @Transactional
     public void deleteEvent(Long id) {
         taskRepository.deleteById(id);
     }

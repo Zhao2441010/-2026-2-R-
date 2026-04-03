@@ -29,32 +29,21 @@ public class Adopt {
     private Cat cat;
 //这里的private不会在数据库中添加user除了id的信息
 
-    @Getter
-    @Column(name="submit_date")
-    private Date submitDate;
-
     @Setter
     @Column(name = "adopt_date",nullable = false)
     @Temporal(TemporalType.DATE)
     //注解存储精度 date日期, time时间, timestamp日期和时间
     private Date adoptDate;
 
-    @Getter@Setter
-    @Column(name="process")
-    private String process;
 
-    public enum Process{
-        ACCEPTED, REJECTED, PENDING,GIVEN_UP,ABANDONED
-    }
 
     protected Adopt() {
     }
 
-    public Adopt( Long userId, Long catId,Date submitDate,Date adoptDate, String process) {
+    public Adopt( Long userId, Long catId,Date adoptDate) {
         this.uc = new UCid(userId,catId);
-        this.submitDate = submitDate;
         this.adoptDate = adoptDate;
-        this.process = process;
+
     }
 
     public Long getUserId() {

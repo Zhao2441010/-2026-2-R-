@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.entity.Task;
+import com.example.demo.entity.Volunteer;
 
 import java.util.Date;
 import java.util.List;
@@ -10,10 +11,9 @@ public interface TaskService {
 
     public void addTask(String description, Date eventDate,Long need);
 
-    public void updateEvemtTime(Long id, Date newDate);
+    public int getVolunteernums(Long tid);
 
-    public void volunteerRegister(Long id);
-    public void volunteerUnRegister(Long id);
+    public void updateEvemtTime(Long id, Date newDate);
 
     public void deleteEvent(Long id);
 

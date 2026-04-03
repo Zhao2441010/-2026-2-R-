@@ -18,7 +18,7 @@ public class Cat {
     private Long id;
 
     @Getter@Setter
-    @Column(name = "name",nullable = false,length = 255)
+    @Column(name = "name",nullable = false)
     private String name;
 
     @Getter@Setter

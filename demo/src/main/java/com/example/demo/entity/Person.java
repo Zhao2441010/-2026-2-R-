@@ -24,7 +24,7 @@ public abstract class Person {
     private String password; //密码字段，类型为String，不能为空，长度最大为255
 
     @Getter@Setter
-    @Column(name = "username",nullable = false,length=255)
+    @Column(name = "username",nullable = false)
     private String username; //用户名字段，类型为String，不能为空，长度最大为255
 
     @Getter@Setter
@@ -40,12 +40,12 @@ public abstract class Person {
     private int age; //年龄字段，类型为int
 
     @Getter@Setter
-    @Column(name = "phone_number",nullable = false,unique=true,length=20) //指定对应数据库表中的列名为phone_number
+    @Column(name = "phone_number",nullable = false,unique=true) //指定对应数据库表中的列名为phone_number
     //指定不能为空,也不能重复
     private String phoneNumber; //电话号码字段，类型为String
 
     @Getter@Setter
-    @Column(name = "address",nullable=true,length = 255) //指定对应数据库表中的列名为address
+    @Column(name = "address",nullable=true) //指定对应数据库表中的列名为address
     private String address; //地址字段，类型为String    
 
 

@@ -27,10 +27,6 @@ public class Task {
     @Column(name="need")
     private Long need;
 
-    @Getter@Setter
-    @Column(name="have")
-    private Long have;
-
     protected Task() {
     }
 
@@ -38,7 +34,6 @@ public class Task {
         this.description = description;
         this.eventdate=eventdate;
         this.need=need;
-        this.have=0L;
     }
 
 

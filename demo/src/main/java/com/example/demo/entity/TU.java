@@ -20,5 +20,11 @@ public class TU {
     @Column(name="task_id")
     private Long taskId;
 
+    protected TU(){}
+
+    public TU(Long tid,Long uid) {
+        this.taskId=tid;
+        this.userId=uid;
+    }
 
 }

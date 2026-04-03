@@ -6,8 +6,10 @@ import java.util.List;
 
 public interface TUService {
 
-    public List<TU> findEventByUserId(Long uid);
-    public List<TU> findVolunteerByTaskId(Long tid);
+    uidRegisterFortid(Long uid,Long tid)
+
+    public List<TU> findTUByUserId(Long uid);
+    public List<TU> findTUByTaskId(Long tid);
 
     public void deleteById(Long id);
 
