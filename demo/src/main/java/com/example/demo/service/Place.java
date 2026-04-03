@@ -1,5 +1,5 @@
 package com.example.demo.service;
 
-public class Place {
+public interface Place {
     
 }

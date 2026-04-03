@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    public void addTask(String description, Date eventDate);
+    public void addTask(String description, Date eventDate,Long need);
 
     public void updateEvemtTime(Long id, Date newDate);
 
@@ -23,4 +23,5 @@ public interface TaskService {
 
     public List<Task> querryFutureEvent(Date eventdate);
 
+    public Task findTaskById(Long id);
 }

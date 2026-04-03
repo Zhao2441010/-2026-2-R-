@@ -1,9 +1,9 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.Date;
 
 @Entity
@@ -34,10 +34,11 @@ public class Task {
     protected Task() {
     }
 
-    public Task(String description, Data eventdate) {
+    public Task(String description, Date eventdate,Long need) {
         this.description = description;
-        this.eventdate=date;
-        this.need=0L;this.have=0L;
+        this.eventdate=eventdate;
+        this.need=need;
+        this.have=0L;
     }
 
 

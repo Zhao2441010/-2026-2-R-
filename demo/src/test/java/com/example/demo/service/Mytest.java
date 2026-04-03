@@ -42,7 +42,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import java.util.Date;
+import java.util.List;
+import com.example.demo.entity.*;
 
 
 @Slf4j
@@ -52,11 +54,296 @@ import org.springframework.transaction.annotation.Transactional;
 public class Mytest {
     
     @Autowired
-    private LogService logService;  // ← 改为接口，不是 MessageServiceImpl
+    private TaskService taskService;  // ← 改为接口，不是 MessageServiceImpl
 
     @Test
     void testSaveMessage() {
 
+        Date date = new Date();
+        Date datefuture = new Date();
+        Date beforedate = new Date();
+        Date afterdate = new Date();
+
+        date.setTime(date.getTime());
+
+        datefuture.setTime(date.getTime()+ 1000L * 60 * 60 * 24);
+        beforedate.setTime(date.getTime()-1000L * 60 * 60 * 24);
+        afterdate.setTime(date.getTime());
+
+//        taskService.addTask("Feed",date,10L);                      今天
+//        taskService.addTask("GoHospitol",datefuture,15L);          今天+1
+//        taskService.addTask("Shower",beforedate,10L);              今天-1
+//        taskService.addTask("Walk",afterdate,5L);                  今天
+
+        System.out.println("all");
+        List<Task> tasks = taskService.querryAllEvent();
+        for (Task task : tasks) {
+            System.out.println(task.getDescription()+" "+task.getEventdate());
+        }
+
+        System.out.println("today");
+        List<Task> today = taskService.querryTodayEvent(date);
+        for (Task task : today) {
+            System.out.println(task.getDescription()+" "+task.getEventdate());
+        }
+
+        System.out.println("future");
+        List<Task> future = taskService.querryFutureEvent(datefuture);
+        for (Task task : future) {
+            System.out.println(task.getDescription()+" "+task.getEventdate());
+        }
+
+        taskService.updateEvemtTime(4L,new Date(afterdate.getTime()+1000L * 60 * 60 * 24*3));  //今天+3
+
+        taskService.volunteerRegister(4L);
+        taskService.volunteerRegister(4L);
+
+        Task t= taskService.findTaskById(4L);
+
+        System.out.println(t.getHave());
+
+        taskService.volunteerUnRegister(4L);
+
+        System.out.println(taskService.findTaskById(4L).getHave());
+
+
+
+
+
 
     }
 }
+/*
+// package com.example.demo.service;
+
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.Mock;
+// import org.mockito.InjectMocks;
+// import org.mockito.junit.jupiter.MockitoExtension;
+
+// import com.example.demo.entity.*;
+// import com.example.demo.repository.MessageRepository;
+// import com.example.demo.service.MessageServiceImpl;
+// @ExtendWith(MockitoExtension.class)  // 使用Mockito扩展
+// public class Mytest {
+
+//     @Mock
+//     private MessageRepository messageRepository;  // 模拟MessageRepository
+
+//     @InjectMocks
+//     private MessageServiceImpl messageService;  // 注入MessageService
+
+//     @Test  // 标记这是测试方法
+//     void test(){
+
+//         Message message = new Message(1L, "Hello, World!");
+
+//         messageService.saveMessage(message);
+
+//         System.out.println("Hello, World!");
+
+
+//     }
+// }
+
+
+
+package com.example.demo.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
+import com.example.demo.entity.*;
+
+
+@Slf4j
+@SpringBootTest
+@Transactional
+@Rollback(false)  //不回滚,测试数据保留
+public class Mytest {
+
+    @Autowired
+    private TaskService taskService;  // ← 改为接口，不是 MessageServiceImpl
+
+    @Test
+    void testSaveMessage() {
+
+        Date date = new Date();
+        Date datefuture = new Date();
+        Date beforedate = new Date();
+        Date afterdate = new Date();
+
+        date.setTime(date.getTime());
+
+        datefuture.setTime(date.getTime()+ 1000L * 60 * 60 * 24);
+        beforedate.setTime(date.getTime()-1000L * 60 * 60 * 24);
+        afterdate.setTime(date.getTime());
+
+//        taskService.addTask("Feed",date,10L);                      今天
+//        taskService.addTask("GoHospitol",datefuture,15L);          今天+1
+//        taskService.addTask("Shower",beforedate,10L);              今天-1
+//        taskService.addTask("Walk",afterdate,5L);                  今天
+
+        System.out.println("all");
+        List<Task> tasks = taskService.querryAllEvent();
+        for (Task task : tasks) {
+            System.out.println(task.getDescription()+" "+task.getEventdate());
+        }
+
+        System.out.println("today");
+        List<Task> today = taskService.querryTodayEvent(date);
+        for (Task task : today) {
+            System.out.println(task.getDescription()+" "+task.getEventdate());
+        }
+
+        System.out.println("future");
+        List<Task> future = taskService.querryFutureEvent(datefuture);
+        for (Task task : future) {
+            System.out.println(task.getDescription()+" "+task.getEventdate());
+        }
+
+        taskService.updateEvemtTime(4L,new Date(afterdate.getTime()+1000L * 60 * 60 * 24*3));  //今天+3
+
+        taskService.volunteerRegister(4L);
+        taskService.volunteerRegister(4L);
+
+        Task t= taskService.findTaskById(4L);
+
+        System.out.println(t.getHave());
+
+        taskService.volunteerUnRegister(4L);
+
+        System.out.println(taskService.findTaskById(4L).getHave());
+
+
+
+
+
+
+    }
+}
+
+
+
+package com.example.demo.repository;
+
+import com.example.demo.entity.Task;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public interface TaskRepository extends JpaRepository<Task, Integer> {
+
+    @Modifying
+    public void deleteById(Long id);
+
+    @Modifying
+    @Query("update Task t set t.eventdate = :eventdate where t.Id = :id")
+    public void updateEventdateById(Long id, Date eventdate);
+
+    @Modifying
+    @Query("update Task t set t.have = t.have+1 where t.Id = :id")
+    void volunteerRegister(Long id);
+
+    @Modifying
+    @Query("update Task t set t.have = t.have-1 where t.Id = :id")
+    void volunteerUnregister(Long id);
+
+
+    public List<Task> findByEventdate(Date today);
+
+    @Query("select t from Task t where t.eventdate > :today order by t.eventdate asc")
+    public List<Task> findFutureEvent(Date today);
+
+    @Query("select t from Task t order by t.eventdate desc")
+    public List<Task> findAllEvent();
+
+    Task findById(Long id);
+}
+
+
+
+
+package com.example.demo.service;
+
+import com.example.demo.entity.Task;
+import com.example.demo.repository.TaskRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
+
+@Service
+@Transactional
+public class TaskServiceImpl implements TaskService {
+
+    private final TaskRepository taskRepository;
+    public TaskServiceImpl(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
+
+    @Override
+    public void addTask(String description, Date eventDate,Long need) {
+        taskRepository.save(new Task(description, eventDate,need));
+    }
+
+    @Override
+    public void updateEvemtTime(Long id, Date newDate) {
+        taskRepository.updateEventdateById(id, newDate);
+    }
+
+    @Override
+    public void volunteerRegister(Long id) {
+        taskRepository.volunteerRegister(id);
+    }
+
+    @Override
+    public void volunteerUnRegister(Long id) {
+        taskRepository.volunteerUnregister(id);
+    }
+
+    @Override
+    public void deleteEvent(Long id) {
+        taskRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Task> querryAllEvent() {
+        return taskRepository.findAllEvent();
+    }
+
+    @Override
+    public List<Task> querryTodayEvent(Date today) {
+        return taskRepository.findByEventdate(today);
+    }
+
+    @Override
+    public List<Task> querryFutureEvent(Date eventdate) {
+        return taskRepository.findFutureEvent(eventdate);
+    }
+
+    @Override
+    public Task findTaskById(Long id) {
+        return taskRepository.findById(id);
+    }
+}
+
+
+
+
+test中会有数据have的修改但未正确修改到实例上,怎么解决
+
+ */

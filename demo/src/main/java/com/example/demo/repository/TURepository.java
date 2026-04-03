@@ -14,14 +14,14 @@ import java.util.List;
 
 public interface TURepository extends JpaRepository<TU,Long> {
 
-    public List<TU> findByuid(Long uid);
-    public List<TU> findBytid(Long tid);
+    @Query("select t from TU t where t.userId=:uid")
+    public List<TU> findByuid(@Param("uid") Long uid);
+
+    @Query("select t from TU t where t.taskId=:tid")
+    public List<TU> findBytid(@Param("tid") Long tid);
 
     @Modifying
-    public void deleteById(Long id);
-
-    @Modifying
-    @Query("delete from TU t where t.taskId =:tid and t.userId =: uid")
+    @Query("delete from TU t where t.taskId =:tid and t.userId =:uid")
     public void deleteByTU(@Param("tid") Long tid, @Param("uid") Long uid);
 
     @Query("select count(t) from TU t where t.taskId=:taskid")
