@@ -22,6 +22,10 @@ public class Cat {
     private String name;
 
     @Getter@Setter
+    @Column(name="image")
+    private String image;
+
+    @Getter@Setter
     @Column(name = "age")
     private int age;
 
@@ -38,11 +42,11 @@ public class Cat {
     private Boolean jueyu;
 
     @Getter@Setter
-    @Column(name ="adopted")
-    private Boolean adopted;
+    @Column(name ="owner")
+    private Long owner;
 
     @Getter@Setter
-    @Column(name = "fed")
+    @Column(name = "feed")
     private Boolean feed;
 
     public enum Health {
@@ -54,13 +58,14 @@ public class Cat {
     protected Cat() {
     }
 
-    public Cat( String name, int age, String type, String health, Boolean jueyu, Boolean adopted) {
+    public Cat( String name,String image, int age, String type, String health, Boolean jueyu) {
         this.name = name;
+        this.image = image;
         this.age = age;
         this.type = type;
         this.health = health;
         this.jueyu = jueyu;
-        this.adopted = adopted;
+        this.owner = 0L;
     }
 
 

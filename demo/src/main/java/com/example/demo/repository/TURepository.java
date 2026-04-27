@@ -24,7 +24,13 @@ public interface TURepository extends JpaRepository<TU,Long> {
     @Query("delete from TU t where t.taskId =:tid and t.userId =:uid")
     public void deleteByTU(@Param("tid") Long tid, @Param("uid") Long uid);
 
+    @Modifying
+    public void deleteById(@Param("id") Long id);
+
     @Query("select count(t) from TU t where t.taskId=:taskid")
     public int countVolunteerByTaskId(Long taskid);
+
+    @Query("select t from TU t where t.taskId=:tid and t.userId=:uid")
+    public TU findBytidAnduid(@Param("tid") Long tid, @Param("uid") Long uid);
 
 }

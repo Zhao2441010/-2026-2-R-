@@ -15,6 +15,13 @@ public class User extends Person{
         super(username, realname, gender, age, phoneNumber, address);
     }
 
+    public User(String username, String gender, String phonenumber,String password){
+        this.setUsername(username);
+        this.setGender(gender);
+        this.setPassword(password);
+        this.setPhoneNumber(phonenumber);
+    }
+
     public void setUsername(String username) {
         super.setUsername(username);
     }
@@ -53,7 +60,9 @@ public class User extends Person{
         return super.getId();
     }
 
-
+    public String getPassword() {
+        return super.getPassword();
+    }
     
 }
 

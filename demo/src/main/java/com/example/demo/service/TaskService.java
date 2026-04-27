@@ -23,5 +23,11 @@ public interface TaskService {
 
     public List<Task> querryFutureEvent(Date eventdate);
 
+    public List<Task> querryActiveEvent(Date eventdate);
+
     public Task findTaskById(Long id);
+
+    public List<Task> findTop10Active();
+
+    public List<Task> findActive();
 }

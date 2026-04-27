@@ -19,7 +19,7 @@ public abstract class Person {
     private Long id; //主键字段，类型为Long
 
 
-    @Setter
+    @Setter@Getter
     @Column(name="password",nullable = false)//指定对应数据库表中的列名为password
     private String password; //密码字段，类型为String，不能为空，长度最大为255
 

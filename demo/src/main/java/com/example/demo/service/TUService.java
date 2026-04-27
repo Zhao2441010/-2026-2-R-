@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TUService {
 
-    uidRegisterFortid(Long uid,Long tid)
+    void uidRegisterFortid(Long uid,Long tid);
 
     public List<TU> findTUByUserId(Long uid);
     public List<TU> findTUByTaskId(Long tid);
@@ -16,5 +16,7 @@ public interface TUService {
     public void deleteByTU(Long tid, Long uid);
 
     public int countVolunteerByTaskId(Long taskid);
+
+    boolean checkRegister(Long uid,Long tid);
 
 }

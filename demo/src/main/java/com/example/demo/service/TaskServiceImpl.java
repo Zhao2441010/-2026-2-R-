@@ -5,6 +5,7 @@ import com.example.demo.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,34 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> querryActiveEvent(Date eventdate) {
+        return taskRepository.findActiveEvent(eventdate);
+    }
+
+    @Override
     public Task findTaskById(Long id) {
         return taskRepository.findById(id);
     }
+
+    @Override
+    public List<Task> findTop10Active(){
+        List<Task>l1= findActive();
+
+        List<Task>l2= new ArrayList<>();
+
+        for(int i=0;i<l1.size();i++){
+            if(i<10)l2.add(l1.get(i));
+            else break;
+        }
+        return l2;
+
+    }
+
+    @Override
+    public List<Task> findActive(){
+        Date today = new Date();
+        today.setTime(today.getTime()-1*60*60*1000);
+        return taskRepository.findActiveEvent(today);
+    }
+
 }

@@ -36,6 +36,11 @@ public class Task {
         this.need=need;
     }
 
+    public boolean isEnded(){
+        Date now = new Date();
+        now.setTime(now.getTime()-24*60*60*1000);
+        return    now.after(this.eventdate);
+    }
 
 
 }
