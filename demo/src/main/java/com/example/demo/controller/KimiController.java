@@ -29,26 +29,37 @@ public class KimiController {
         try {
             String userMessage = (String) request.get("message");
             @SuppressWarnings("unchecked")
-            List<Map<String, String>> history = (List<Map<String, String>>) request.getOrDefault("history", List.of());
+            List<String> images = (List<String>) request.getOrDefault("images", List.of());
 
             ObjectNode requestBody = objectMapper.createObjectNode();
-            requestBody.put("model", kimiConfig.getModel());
+            boolean hasImages = images != null && !images.isEmpty();
+            requestBody.put("model", hasImages ? "moonshot-v1-8k-vision-preview" : kimiConfig.getModel());
 
             ArrayNode messages = requestBody.putArray("messages");
 
             ObjectNode systemMsg = messages.addObject();
             systemMsg.put("role", "system");
-            systemMsg.put("content", "你是校园猫咪小助手，专门帮助同学们了解校园里的猫咪信息、志愿任务等。请用友好、亲切的语气回答。");
-
-            for (Map<String, String> msg : history) {
-                ObjectNode historyMsg = messages.addObject();
-                historyMsg.put("role", msg.get("role"));
-                historyMsg.put("content", msg.get("content"));
-            }
+            systemMsg.put("content", "你是校园猫咪小助手，专门帮助同学们了解校园里的猫咪信息、志愿任务等。请用友好、亲切的语气回答。你可以识别用户上传的猫咪图片，帮助辨认品种、健康状况等。");
 
             ObjectNode userMsg = messages.addObject();
             userMsg.put("role", "user");
-            userMsg.put("content", userMessage);
+
+            if (hasImages) {
+                ArrayNode contentArray = userMsg.putArray("content");
+
+                ObjectNode textPart = contentArray.addObject();
+                textPart.put("type", "text");
+                textPart.put("text", userMessage != null ? userMessage : "请描述这张图片");
+
+                for (String imageUrl : images) {
+                    ObjectNode imagePart = contentArray.addObject();
+                    imagePart.put("type", "image_url");
+                    ObjectNode imageUrlObj = imagePart.putObject("image_url");
+                    imageUrlObj.put("url", imageUrl);
+                }
+            } else {
+                userMsg.put("content", userMessage);
+            }
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,7 +83,6 @@ public class KimiController {
             ));
 
         } catch (HttpClientErrorException e) {
-            // ✅ 统一捕获所有 HTTP 4xx 错误，根据状态码判断
             e.printStackTrace();
 
             if (e.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {

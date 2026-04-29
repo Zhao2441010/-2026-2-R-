@@ -22,6 +22,8 @@ public interface CatRepository extends JpaRepository<Cat,Long> {
     @Query("select c from Cat c ")
     List<Cat> getAll();
 
+    @Query("select count(c) from Cat c ")
+    Long countAll();
 
     @Modifying
     @Query("update Cat c  set c.image=:image where c.id=:cid")

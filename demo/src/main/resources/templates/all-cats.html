@@ -317,6 +317,16 @@
             cursor: not-allowed;
         }
 
+        .btn-more {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
         .loading {
             text-align: center;
             padding: 80px;
@@ -448,7 +458,15 @@
                         >
                             {{ catDetail.feed ? '投喂猫咪' : '暂不可投喂' }}
                         </button>
+
+                        <button
+                                class="btn-action btn-more"
+                                @click="goToDetail(catDetail.id)"
+                        >
+                            查看更多 →
+                        </button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -519,6 +537,11 @@
                 }
             };
 
+            // 跳转到详情页
+            const goToDetail = (id) => {
+                window.location.href = `/cat-detail.html?id=${id}`;
+            };
+
             onMounted(() => {
                 fetchCats();
             });
@@ -533,7 +556,8 @@
                 filterFeed,
                 showDetail,
                 closeDetail,
-                handleFeed
+                handleFeed,
+                goToDetail,
             };
         }
     }).mount('#app');

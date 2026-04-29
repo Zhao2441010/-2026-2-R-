@@ -39,6 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long countAll() {
+        return userRepository.countAll();
+    }
+
+    @Override
     public boolean existsByPhonenumber(String phonenumber) {
         User u=userRepository.getUserByPhoneNumber(phonenumber);
         if(u!=null){return true;}

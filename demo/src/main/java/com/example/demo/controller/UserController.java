@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Admin;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -69,7 +70,7 @@ public class UserController {
     /**
      * 用户登录
      * POST /api/user/login
-     * 参数: username, password
+     * 参数: phonenumber, password
      */
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> request,
@@ -103,6 +104,9 @@ public class UserController {
         // 登录成功，将用户信息存入 Session
         session.setAttribute("currentUser", user);
 
+        // 判断角色：Admin 子类返回 ADMIN，否则 USER
+        String role = (user instanceof Admin) ? "ADMIN" : "USER";
+
         // 返回用户信息（不包含密码）
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("id", user.getId());
@@ -115,6 +119,7 @@ public class UserController {
 
         response.put("success", true);
         response.put("message", "登录成功");
+        response.put("role", role);           // ← 新增：返回角色
         response.put("user", userInfo);
         return ResponseEntity.ok(response);
     }
@@ -134,6 +139,10 @@ public class UserController {
             return ResponseEntity.status(401).body(response);
         }
 
+        // 判断角色
+        String role = (user instanceof Admin) ? "ADMIN" : "USER";
+
+        response.put("success", true);        // ← 新增：统一返回格式
         response.put("id", user.getId());
         response.put("username", user.getUsername());
         response.put("phoneNumber", user.getPhoneNumber());
@@ -141,6 +150,7 @@ public class UserController {
         response.put("age", user.getAge());
         response.put("address", user.getAddress());
         response.put("realname", user.getRealname());
+        response.put("role", role);           // ← 新增：返回角色
         return ResponseEntity.ok(response);
     }
 

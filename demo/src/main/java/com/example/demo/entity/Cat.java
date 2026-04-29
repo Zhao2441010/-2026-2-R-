@@ -29,7 +29,7 @@ public class Cat {
     @Column(name = "age")
     private int age;
 
-    @Getter
+    @Getter@Setter
     @Column(name = "type")
     private String type;
 

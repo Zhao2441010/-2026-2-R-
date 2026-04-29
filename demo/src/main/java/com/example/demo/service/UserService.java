@@ -16,6 +16,8 @@ public interface UserService {
 
     List<User> getAllUser();
 
+    Long countAll();
+
     boolean existsByPhonenumber(String phonenumber);
 
     User getUserByPhonenumber(String phonenumber);

@@ -54,7 +54,8 @@ import com.example.demo.entity.*;
 public class Mytest {
     
     @Autowired
-    private TaskService testService;  // ← 改为接口，不是 MessageServiceImpl
+    private Service testService;  // ← 改为接口，不是 MessageServiceImpl
+
 
 
     @Test
@@ -62,6 +63,8 @@ public class Mytest {
 
 
 
+
+        System.out.println("\n\nfinish\n");
 
 
 

@@ -53,5 +53,10 @@ public class CatServiceImpl implements CatService {
     }
 
 
+    @Override
+    public Long countAll(){
+        return catRepository.countAll();
+    }
+
 
 }

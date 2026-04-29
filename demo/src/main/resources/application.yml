@@ -6,9 +6,9 @@ server:
 #sk-rMun6POhaI9H9myqAhEjo82g3luQUpzmy5ypusVdp6sSb04W
 
 kimi:
-  apiKey: #sk-rMun6POhaI9H9myqAhEjo82g3luQUpzmy5ypusVdp6sSb04W
+  apiKey: sk-rMun6POhaI9H9myqAhEjo82g3luQUpzmy5ypusVdp6sSb04W
   baseUrl: https://api.moonshot.cn/v1
-  model: moonshot-v1-8k
+  model:  moonshot-v1-8k #kimi-k2.6
 
 spring:
   application:

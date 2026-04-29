@@ -18,4 +18,6 @@ public interface CatService{
 
     List<Cat> getAllCat();
 
+    Long countAll();
+
 }

@@ -64,6 +64,8 @@ public interface UserRepository extends JpaRepository<User,Long>  {
     @Query("select u from User u")
     List<User> getAll();
 
+    @Query("select count(u) from User u")
+    Long countAll();
 
     @Query("select u from User u where u.phoneNumber=:phonenumber")
     User getUserByPhoneNumber(@Param("phonenumber") String phonenumber);
