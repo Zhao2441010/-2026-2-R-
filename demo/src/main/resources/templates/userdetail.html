@@ -55,6 +55,7 @@
             padding: 40px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             text-align: center;
+            margin-bottom: 20px;
         }
         .profile-avatar {
             width: 100px;
@@ -78,6 +79,22 @@
             color: #7f8c8d;
             font-size: 1rem;
             margin-bottom: 30px;
+        }
+        .btn-edit {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         .info-list {
             display: grid;
@@ -104,8 +121,11 @@
         .stats-section {
             margin-top: 30px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -122,6 +142,135 @@
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.9;
+        }
+        /* 上传信息列表 */
+        .upload-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .upload-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .upload-list {
+            display: grid;
+            gap: 12px;
+        }
+        .upload-item {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .upload-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .upload-item-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approve { background: #d4edda; color: #155724; }
+        .status-reject { background: #f8d7da; color: #721c24; }
+        .status-suggestion { background: #d1ecf1; color: #0c5460; }
+        .upload-item-desc {
+            color: #2c3e50;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .upload-item-time {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+        .upload-empty {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 30px;
+        }
+        /* 编辑弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #e9ecef;
+            color: #2c3e50;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
         }
         .loading {
             text-align: center;
@@ -155,6 +304,7 @@
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
     </style>
+    <base target="_blank">
 </head>
 <body>
 <div id="app">
@@ -175,52 +325,118 @@
         <div v-if="loading" class="loading">加载中...</div>
 
         <!-- 已登录状态 -->
-        <div v-if="currentUser && !loading" class="profile-card">
-            <div class="profile-avatar">
-                {{ currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U' }}
-            </div>
-            <h1 class="profile-name">{{ currentUser.username }}</h1>
-            <p class="profile-role">普通用户</p>
+        <div v-if="currentUser && !loading">
+            <!-- 基本信息卡片 -->
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    {{ currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U' }}
+                </div>
+                <h1 class="profile-name">{{ currentUser.username }}</h1>
+                <p class="profile-role">普通用户</p>
 
-            <div class="info-list">
-                <div class="info-row">
-                    <span class="info-label">用户ID</span>
-                    <span class="info-value">#{{ currentUser.id }}</span>
+                <button class="btn-edit" @click="openEditModal">✏️ 修改信息</button>
+
+                <div class="info-list">
+                    <div class="info-row">
+                        <span class="info-label">用户ID</span>
+                        <span class="info-value">#{{ currentUser.id }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">用户名</span>
+                        <span class="info-value">{{ currentUser.username }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">实际姓名</span>
+                        <span class="info-value">{{ currentUser.realname || '未设置' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">手机号</span>
+                        <span class="info-value">{{ currentUser.phoneNumber || '未设置' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">性别</span>
+                        <span class="info-value">{{ currentUser.gender || '未设置' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">年龄</span>
+                        <span class="info-value">{{ currentUser.age || '未设置' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">地址</span>
+                        <span class="info-value">{{ currentUser.address || '未设置' }}</span>
+                    </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">用户名</span>
-                    <span class="info-value">{{ currentUser.username }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">手机号</span>
-                    <span class="info-value">{{ currentUser.phoneNumber || '未设置' }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">性别</span>
-                    <span class="info-value">{{ currentUser.gender || '未设置' }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">年龄</span>
-                    <span class="info-value">{{ currentUser.age || '未设置' }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">地址</span>
-                    <span class="info-value">{{ currentUser.address || '未设置' }}</span>
+
+                <div class="stats-section">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.volunteerCount || 0 }}</div>
+                        <div class="stat-label">参与志愿服务次数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.uploadCount || 0 }}</div>
+                        <div class="stat-label">上传信息</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="stats-section">
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">投喂次数</div>
+            <!-- 上传信息列表 -->
+            <div class="profile-card">
+                <div class="upload-title">📋 最近上传信息（前3条）</div>
+                <div v-if="recentLogs.length === 0" class="upload-empty">
+                    暂无上传记录
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">关注猫咪</div>
+                <div v-else class="upload-list">
+                    <div v-for="log in recentLogs" :key="log.id" class="upload-item">
+                        <div class="upload-item-header">
+                            <span :class="['upload-item-status', getStatusClass(log.status)]">
+                                {{ getStatusText(log.status) }}
+                            </span>
+                            <span class="upload-item-time">{{ formatDate(log.submitDate) }}</span>
+                        </div>
+                        <div class="upload-item-desc">{{ log.description }}</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">发布动态</div>
+            </div>
+        </div>
+
+        <!-- 编辑弹窗 -->
+        <div v-if="showEditModal" class="modal-overlay" @click.self="closeEditModal">
+            <div class="modal-content">
+                <div class="modal-title">修改个人信息</div>
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input class="form-input" v-model="editForm.username" placeholder="请输入用户名" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">实际姓名</label>
+                    <input class="form-input" v-model="editForm.realname" placeholder="请输入实际姓名" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">手机号（不可修改）</label>
+                    <input class="form-input" v-model="editForm.phoneNumber" disabled style="background: #e9ecef; color: #6c757d; cursor: not-allowed;" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">性别</label>
+                    <select class="form-input" v-model="editForm.gender">
+                        <option value="">请选择</option>
+                        <option value="MALE">男</option>
+                        <option value="FEMALE">女</option>
+                        <option value="OTHER">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">年龄</label>
+                    <input class="form-input" type="number" v-model="editForm.age" placeholder="请输入年龄" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">地址</label>
+                    <input class="form-input" v-model="editForm.address" placeholder="请输入地址" />
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" @click="closeEditModal">取消</button>
+                    <button class="btn-save" @click="saveProfile" :disabled="saving">
+                        {{ saving ? '保存中...' : '保存' }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -228,23 +444,83 @@
 </div>
 
 <script>
-    const { createApp, ref, onMounted } = Vue;
+    const { createApp, ref, onMounted, reactive } = Vue;
 
     createApp({
         setup() {
             const currentUser = ref(null);
             const loading = ref(true);
+            const stats = ref({});
+            const recentLogs = ref([]);
+            const showEditModal = ref(false);
+            const saving = ref(false);
+
+            const editForm = reactive({
+                username: '',
+                realname: '',
+                phoneNumber: '',
+                gender: '',
+                age: '',
+                address: ''
+            });
 
             const fetchCurrentUser = async () => {
                 try {
                     const response = await axios.get('/api/user/current', { withCredentials: true });
                     if (response.data && response.data.username) {
                         currentUser.value = response.data;
+                        await fetchUserStats();
                     }
                 } catch (error) {
                     currentUser.value = null;
                 } finally {
                     loading.value = false;
+                }
+            };
+
+            const fetchUserStats = async () => {
+                if (!currentUser.value) return;
+                try {
+                    const response = await axios.get('/api/user/stats', { withCredentials: true });
+                    if (response.data && response.data.success) {
+                        stats.value = response.data.stats || {};
+                        recentLogs.value = response.data.recentLogs || [];
+                    }
+                } catch (error) {
+                    console.error('获取统计失败:', error);
+                }
+            };
+
+            const openEditModal = () => {
+                editForm.username = currentUser.value.username || '';
+                editForm.realname = currentUser.value.realname || '';
+                editForm.phoneNumber = currentUser.value.phoneNumber || '';
+                editForm.gender = currentUser.value.gender || '';
+                editForm.age = currentUser.value.age || '';
+                editForm.address = currentUser.value.address || '';
+                showEditModal.value = true;
+            };
+
+            const closeEditModal = () => {
+                showEditModal.value = false;
+            };
+
+            const saveProfile = async () => {
+                saving.value = true;
+                try {
+                    const response = await axios.post(`/api/user/update/${currentUser.value.id}`, editForm, { withCredentials: true });
+                    if (response.data && response.data.success) {
+                        // 更新本地数据
+                        currentUser.value = { ...currentUser.value, ...editForm };
+                        alert('修改成功');
+                        closeEditModal();
+                    } else {
+                        alert(response.data.message || '修改失败');
+                    }
+                } catch (error) {
+                    alert(error.response?.data?.message || '修改失败，请重试');
+                } finally {
+                    saving.value = false;
                 }
             };
 
@@ -259,11 +535,58 @@
                 }
             };
 
+            const getStatusClass = (status) => {
+                const map = {
+                    'PENDING': 'status-pending',
+                    'APPROVE': 'status-approve',
+                    'REJECT': 'status-reject',
+                    'SUGGESTION': 'status-suggestion'
+                };
+                return map[status] || 'status-pending';
+            };
+
+            const getStatusText = (status) => {
+                const map = {
+                    'PENDING': '待处理',
+                    'APPROVE': '已通过',
+                    'REJECT': '已拒绝',
+                    'SUGGESTION': '建议'
+                };
+                return map[status] || status;
+            };
+
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
             onMounted(() => {
                 fetchCurrentUser();
             });
 
-            return { currentUser, loading, logout };
+            return {
+                currentUser,
+                loading,
+                stats,
+                recentLogs,
+                showEditModal,
+                editForm,
+                saving,
+                openEditModal,
+                closeEditModal,
+                saveProfile,
+                logout,
+                getStatusClass,
+                getStatusText,
+                formatDate
+            };
         }
     }).mount('#app');
 </script>

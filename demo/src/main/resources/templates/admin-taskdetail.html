@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务详情 - 管理员</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; color: #4f46e5; text-decoration: none; font-size: 14px; margin-bottom: 20px; cursor: pointer; }
+        .back-link:hover { text-decoration: underline; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .page-header h1 { font-size: 24px; color: #1a1a2e; }
+        .header-actions { display: flex; gap: 12px; }
+        .btn { padding: 10px 20px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; border: none; display: flex; align-items: center; gap: 6px; }
+        .btn-primary { background: #4f46e5; color: white; }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+        .card-title { font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 14px; font-weight: 500; color: #374151; }
+        .form-group input, .form-group textarea { padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; transition: all 0.2s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .info-item { background: #f9fafb; padding: 16px; border-radius: 8px; }
+        .info-item .label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+        .info-item .value { font-size: 16px; font-weight: 600; color: #1f2937; }
+        .volunteer-table { width: 100%; border-collapse: collapse; }
+        .volunteer-table th, .volunteer-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .volunteer-table th { background: #f9fafb; font-size: 12px; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; }
+        .volunteer-table tr:hover { background: #f9fafb; }
+        .volunteer-table td { font-size: 14px; color: #4b5563; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-gray { background: #f3f4f6; color: #4b5563; }
+        .empty-state { text-align: center; padding: 40px; color: #9ca3af; }
+        .loading { text-align: center; padding: 60px; color: #6b7280; }
+        .status-ended { color: #6b7280; }
+        .status-active { color: #10b981; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="back-link" onclick="history.back()">← 返回任务列表</div>
+    <div class="page-header">
+        <h1>任务详情</h1>
+        <div class="header-actions">
+            <button class="btn btn-success" onclick="exportExcel()">📊 导出Excel</button>
+            <button class="btn btn-primary" onclick="saveChanges()">💾 保存修改</button>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title">📋 任务信息</div>
+        <div id="taskInfo"><div class="loading">加载中...</div></div>
+    </div>
+    <div class="card">
+        <div class="card-title">📊 统计信息</div>
+        <div id="statsInfo" class="info-grid"><div class="loading">加载中...</div></div>
+    </div>
+    <div class="card">
+        <div class="card-title">👥 已报名用户（<span id="volunteerCount">0</span>人）</div>
+        <div id="volunteerList"><div class="loading">加载中...</div></div>
+    </div>
+</div>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const tid = urlParams.get('tid');
+    let taskData = null;
+
+    async function loadTaskDetail() {
+        try {
+            const res = await fetch(`/api/admin/tasks/${tid}/detail`);
+            const data = await res.json();
+            if (!data.task) { document.getElementById('taskInfo').innerHTML = '<div class="empty-state">任务不存在</div>'; return; }
+            taskData = data;
+            renderTaskInfo(data.task);
+            renderStats(data);
+            renderVolunteers(data.volunteers);
+        } catch (err) { document.getElementById('taskInfo').innerHTML = '<div class="empty-state">加载失败，请刷新重试</div>'; }
+    }
+
+    function renderTaskInfo(task) {
+        document.getElementById('taskInfo').innerHTML = `
+                <div class="form-row">
+                    <div class="form-group"><label>任务ID</label><input type="text" value="${task.tid}" disabled></div>
+                    <div class="form-group"><label>活动日期</label><input type="date" id="editEventDate" value="${task.eventDate}"></div>
+                    <div class="form-group"><label>需求人数</label><input type="number" id="editNeed" value="${task.need}" min="1"></div>
+                </div>
+                <div class="form-group"><label>任务描述</label><textarea id="editDescription">${escapeHtml(task.description)}</textarea></div>`;
+    }
+
+    function renderStats(data) {
+        const task = data.task, isEnded = task.ended, isFull = task.currentNum >= task.need;
+        document.getElementById('statsInfo').innerHTML = `
+                <div class="info-item"><div class="label">状态</div><div class="value ${isEnded ? 'status-ended' : 'status-active'}">${isEnded ? '已结束' : '进行中'}</div></div>
+                <div class="info-item"><div class="label">已报名</div><div class="value">${task.currentNum} / ${task.need}</div></div>
+                <div class="info-item"><div class="label">报名状态</div><div class="value"><span class="badge ${isFull ? 'badge-blue' : 'badge-green'}">${isFull ? '已满员' : '可报名'}</span></div></div>
+                <div class="info-item"><div class="label">剩余名额</div><div class="value">${Math.max(task.need - task.currentNum, 0)}</div></div>`;
+    }
+
+    function renderVolunteers(volunteers) {
+        document.getElementById('volunteerCount').textContent = volunteers.length;
+        if (volunteers.length === 0) { document.getElementById('volunteerList').innerHTML = '<div class="empty-state">暂无用户报名</div>'; return; }
+        document.getElementById('volunteerList').innerHTML = `
+                <table class="volunteer-table"><thead><tr><th>序号</th><th>用户ID</th><th>用户名</th><th>真实姓名</th><th>性别</th><th>手机号</th></tr></thead>
+                <tbody>${volunteers.map((v, i) => `<tr><td>${i + 1}</td><td>${v.uid}</td><td>${escapeHtml(v.username || '-')}</td><td>${escapeHtml(v.realname || '-')}</td><td><span class="badge badge-gray">${v.gender || '-'}</span></td><td>${v.phoneNumber || '-'}</td></tr>`).join('')}</tbody>
+                </table>`;
+    }
+
+    function escapeHtml(text) { if (!text) return '-'; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+
+    async function saveChanges() {
+        const description = document.getElementById('editDescription').value.trim();
+        const eventDate = document.getElementById('editEventDate').value;
+        const need = parseInt(document.getElementById('editNeed').value);
+        if (!description || !eventDate) { alert('请填写完整信息'); return; }
+        try {
+            const res = await fetch(`/api/admin/tasks/${tid}/update`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ description, eventDate, need }) });
+            const data = await res.json();
+            if (data.success) { alert(data.message); loadTaskDetail(); } else { alert(data.message || '保存失败'); }
+        } catch (err) { alert('保存失败: ' + err.message); }
+    }
+
+    function exportExcel() { window.open(`/api/admin/tasks/${tid}/export`, '_blank'); }
+
+    if (!tid) { document.getElementById('taskInfo').innerHTML = '<div class="empty-state">缺少任务ID参数</div>'; } else { loadTaskDetail(); }
+</script>
+</body>
+</html>

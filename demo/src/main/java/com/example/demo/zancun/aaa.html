@@ -86,48 +86,6 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
-
-        /* ===== 消息盒按钮 ===== */
-        .message-box-btn {
-            position: relative;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-        .message-box-btn:hover {
-            background: #e0e0e0;
-            transform: scale(1.05);
-        }
-        .message-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
-            background: #ff4757;
-            color: white;
-            border-radius: 9px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-            animation: badgePulse 2s infinite;
-        }
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
         /* ===== 登录/注册选择弹窗 ===== */
         .auth-modal-overlay {
             position: fixed;
@@ -446,118 +404,6 @@
         }
 
 
-        /* ===== 建议区域 ===== */
-        .suggestion-section {
-            margin-top: 50px;
-            padding: 40px 30px;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .suggestion-title {
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-        .suggestion-subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-        }
-        .suggestion-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 16px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 16px;
-            font-size: 1rem;
-            font-family: inherit;
-            resize: vertical;
-            outline: none;
-            transition: border-color 0.3s;
-            background: #fafafa;
-        }
-        .suggestion-textarea:focus {
-            border-color: #667eea;
-            background: white;
-        }
-        .suggestion-textarea::placeholder {
-            color: #bbb;
-        }
-        .suggestion-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .suggestion-user-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        .suggestion-user-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-        .btn-suggestion-submit {
-            padding: 12px 36px;
-            border: none;
-            border-radius: 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-suggestion-submit:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        .btn-suggestion-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .suggestion-success-toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: #27ae60;
-            color: white;
-            padding: 14px 32px;
-            border-radius: 30px;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
-            opacity: 0;
-            transition: all 0.4s ease;
-            z-index: 9999;
-            pointer-events: none;
-        }
-        .suggestion-success-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-
         /* ===== Kimi AI 悬浮球 ===== */
         .kimi-float-btn {
             position: fixed;
@@ -824,90 +670,6 @@
             border-color: #667eea;
         }
 
-        /* ===== 图片上传相关样式 ===== */
-        .kimi-image-upload-bar {
-            padding: 8px 16px;
-            background: white;
-            border-top: 1px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .kimi-upload-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid #e0e0e0;
-            background: #f8f9fa;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            color: #667eea;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .kimi-upload-btn:hover {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-        .kimi-image-preview {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            flex: 1;
-        }
-        .kimi-preview-item {
-            position: relative;
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #e0e0e0;
-            flex-shrink: 0;
-        }
-        .kimi-preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .kimi-preview-remove {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-        }
-        .kimi-message-images {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-        }
-        .kimi-message-images img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        .kimi-hidden-input {
-            display: none;
-        }
-
         /* 响应式 */
         @media (max-width: 480px) {
             .kimi-chat-window {
@@ -923,7 +685,6 @@
         }
 
     </style>
-    <base target="_blank">
 </head>
 <body>
 <div id="app">
@@ -940,14 +701,8 @@
                     <button class="btn-auth" @click="showAuthModal = true">登录 / 注册</button>
                 </template>
 
-                <!-- 已登录：消息盒 + 用户信息 -->
+                <!-- 已登录：根据角色跳转不同页面 -->
                 <template v-else>
-                    <!-- 消息盒按钮 -->
-                    <a href="/messagebox.html" class="message-box-btn" title="消息盒">
-                        <span class="message-icon">📬</span>
-                        <span v-if="unreadCount > 0" class="message-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
-                    </a>
-
                     <a :href="currentUser.role === 'ADMIN' ? '/admin.html' : '/userdetail.html'" class="user-info">
                         <div class="user-avatar">{{ currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U' }}</div>
                         <span class="user-name">{{ currentUser.username }}</span>
@@ -1014,47 +769,6 @@
             <div class="more-section">
                 <a href="/all-activetask.html" class="btn-more">查看所有任务 →</a>
             </div>
-        </div>
-
-        <!-- ===== 建议区域 ===== -->
-        <div class="suggestion-section">
-            <h2 class="suggestion-title">💡 联系我们</h2>
-            <p class="suggestion-subtitle">您的每一条信息都是我们进步的动力</p>
-
-            <textarea
-                    v-model="suggestionText"
-                    class="suggestion-textarea"
-                    placeholder="您可以通过这个联系我们,包括遇到流浪猫与有收养打算与其他建议"
-                    maxlength="500"
-                    @keydown="handleSuggestionKeydown"
-            ></textarea>
-
-            <div class="suggestion-footer">
-                <div class="suggestion-user-info">
-                    <template v-if="currentUser">
-                        <div class="suggestion-user-avatar">
-                            {{ currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U' }}
-                        </div>
-                        <span>作为 <strong>{{ currentUser.username }}</strong> 提交</span>
-                    </template>
-                    <template v-else>
-                        <div class="suggestion-user-avatar" style="background: #95a5a6;">?</div>
-                        <span>请先 <a href="#" @click.prevent="showAuthModal = true" style="color: #667eea;">登录</a> 后提交建议</span>
-                    </template>
-                </div>
-                <button
-                        class="btn-suggestion-submit"
-                        @click="submitSuggestion"
-                        :disabled="!suggestionText.trim() || suggestionSubmitting"
-                >
-                    {{ suggestionSubmitting ? '发送中...' : '发送' }}
-                </button>
-            </div>
-        </div>
-
-        <!-- 成功提示 -->
-        <div class="suggestion-success-toast" :class="{ show: showSuggestionToast }">
-            {{ suggestionToastMessage }}
         </div>
 
     </div>
@@ -1173,7 +887,7 @@
 
     <!-- ===== Kimi AI 悬浮球 ===== -->
     <button class="kimi-float-btn pulse" @click="toggleKimiChat" title="AI 小助手">
-        🐱
+        🤖
     </button>
 
     <!-- 聊天窗口 -->
@@ -1198,16 +912,13 @@
             <button class="kimi-quick-btn" @click="sendQuickQuestion('猫咪有哪些常见品种？')">🐱 猫咪有哪些常见品种</button>
             <button class="kimi-quick-btn" @click="sendQuickQuestion('喂猫一般喂什么比较合适？')">🐟 喂猫一般喂什么比较合适</button>
             <button class="kimi-quick-btn" @click="sendQuickQuestion('猫有哪些常见疾病?')">🏥 猫有哪些常见疾病</button>
+            <!--            <button class="kimi-quick-btn" @click="sendQuickQuestion('如何成为志愿者？')">💪 成为志愿者</button>-->
         </div>
 
         <!-- 消息区域 -->
         <div class="kimi-chat-messages" ref="kimiMsgContainer">
             <div v-for="(msg, idx) in kimiMessages" :key="idx"
                  :class="['kimi-message', msg.role]">
-                <!-- 用户消息中的图片 -->
-                <div v-if="msg.images && msg.images.length" class="kimi-message-images">
-                    <img v-for="(img, iidx) in msg.images" :key="iidx" :src="img" @click="window.open(img)">
-                </div>
                 <div v-html="msg.content.replace(/\n/g, '<br>')"></div>
                 <div class="kimi-message-time">{{ msg.time }}</div>
             </div>
@@ -1217,26 +928,6 @@
                 <div class="kimi-typing-dot"></div>
                 <div class="kimi-typing-dot"></div>
                 <div class="kimi-typing-dot"></div>
-            </div>
-        </div>
-
-        <!-- 图片上传栏 -->
-        <div class="kimi-image-upload-bar">
-            <input
-                    type="file"
-                    accept="image/*"
-                    class="kimi-hidden-input"
-                    ref="kimiImageInput"
-                    @change="handleKimiImageSelect"
-            >
-            <button class="kimi-upload-btn" @click="$refs.kimiImageInput.click()" title="上传图片">
-                📷
-            </button>
-            <div class="kimi-image-preview">
-                <div v-for="(img, idx) in kimiPendingImages" :key="idx" class="kimi-preview-item">
-                    <img :src="img" alt="preview">
-                    <button class="kimi-preview-remove" @click="removeKimiImage(idx)">×</button>
-                </div>
             </div>
         </div>
 
@@ -1252,7 +943,7 @@
             <button
                     class="kimi-chat-send"
                     @click="sendKimiMessage"
-                    :disabled="(!kimiInput.trim() && kimiPendingImages.length === 0) || kimiLoading"
+                    :disabled="!kimiInput.trim() || kimiLoading"
             >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -1274,12 +965,12 @@
             const catDetail = ref(null);
             const loading = ref(false);
             const currentUser = ref(null);
-            const showAuthModal = ref(false);
+            const showAuthModal = ref(false);  // 控制登录/注册选择弹窗
             const activeTasks = ref([]);
             const selectedTaskId = ref(null);
             const taskDetail = ref(null);
             const taskLoading = ref(false);
-            const taskRegisterStatus = ref({});
+            const taskRegisterStatus = ref({}); // tid -> boolean
 
 
             const fetchCats = async () => {
@@ -1294,6 +985,7 @@
             const fetchCurrentUser = async () => {
                 try {
                     const response = await axios.get('/api/user/current', { withCredentials: true });
+                    // 后端返回平铺结构：{success:true, username:"...", role:"ADMIN", ...}
                     if (response.data && response.data.success && response.data.username) {
                         currentUser.value = response.data;
                     }
@@ -1302,36 +994,11 @@
                 }
             };
 
-            const unreadCount = ref(0);
-
-            const fetchUnreadCount = async () => {
-                if (!currentUser.value) return;
-                try {
-                    const response = await axios.get('/api/messages/unread-count', { withCredentials: true });
-                    unreadCount.value = response.data.count || 0;
-                } catch (error) {
-                    console.error('获取未读消息数失败:', error);
-                }
-            };
-
-            // 轮询获取未读消息数（每30秒）
-            let unreadPollInterval;
-            const startUnreadPolling = () => {
-                if (unreadPollInterval) clearInterval(unreadPollInterval);
-                unreadPollInterval = setInterval(fetchUnreadCount, 30000);
-            };
-
-            const stopUnreadPolling = () => {
-                if (unreadPollInterval) {
-                    clearInterval(unreadPollInterval);
-                    unreadPollInterval = null;
-                }
-            };
-
             const fetchActiveTasks = async () => {
                 try {
                     const response = await axios.get('/api/tasks/active/top10');
                     activeTasks.value = response.data;
+                    // 如果已登录，批量检查报名状态
                     if (currentUser.value) {
                         await checkTasksRegisterStatus(response.data.map(t => t.tid));
                     }
@@ -1371,6 +1038,7 @@
                 try {
                     const response = await axios.get(`/api/tasks/${tid}`);
                     taskDetail.value = response.data;
+                    // 检查报名状态
                     if (currentUser.value) {
                         const checkRes = await axios.get(`/api/tasks/${tid}/check-register`, { withCredentials: true });
                         taskDetail.value.registered = checkRes.data.registered;
@@ -1407,6 +1075,7 @@
                     taskDetail.value.registered = true;
                     taskDetail.value.currentNum++;
                     taskRegisterStatus.value[taskDetail.value.tid] = true;
+                    // 刷新列表
                     await fetchActiveTasks();
                 } catch (error) {
                     alert(error.response?.data?.message || '报名失败，请重试');
@@ -1456,7 +1125,7 @@
 
             const handleFeed = () => {
                 if (!currentUser.value) {
-                    showAuthModal.value = true;
+                    showAuthModal.value = true;  // 未登录弹出选择窗口
                     return;
                 }
                 if (catDetail.value.feed) {
@@ -1466,70 +1135,12 @@
                 }
             };
 
+            // 跳转到猫咪详情页
             const goToCatDetail = (id) => {
                 window.location.href = `/cat-detail.html?id=${id}`;
             };
 
-            const suggestionText = ref('');
-            const suggestionSubmitting = ref(false);
-            const showSuggestionToast = ref(false);
-            const suggestionToastMessage = ref('');
 
-            const submitSuggestion = async () => {
-                const text = suggestionText.value.trim();
-                if (!text) return;
-                if (text.length > 500) {
-                    alert('建议内容不能超过500字哦');
-                    return;
-                }
-
-                // 检查是否登录
-                if (!currentUser.value) {
-                    showAuthModal.value = true;
-                    return;
-                }
-
-                suggestionSubmitting.value = true;
-
-                try {
-                    const payload = {
-                        suggestion: text
-                    };
-
-                    const response = await axios.post('/api/logs/suggestion', payload, {
-                        withCredentials: true
-                    });
-
-                    if (response.data && response.data.success) {
-                        suggestionText.value = '';
-                        suggestionToastMessage.value = response.data.message || '感谢您的建议！💕';
-                        showSuggestionToast.value = true;
-                        setTimeout(() => {
-                            showSuggestionToast.value = false;
-                        }, 3000);
-                    } else {
-                        // 显示后端返回的错误信息（包括"今天已经上传"等提示）
-                        alert(response.data?.message || '提交失败，请重试');
-                    }
-                } catch (error) {
-                    console.error('提交建议失败:', error);
-                    let msg = '提交失败，请检查网络后重试';
-                    if (error.response?.data?.message) {
-                        msg = error.response.data.message;
-                    }
-                    alert(msg);
-                } finally {
-                    suggestionSubmitting.value = false;
-                }
-            };
-
-            const handleSuggestionKeydown = (e) => {
-                // Ctrl+Enter 快速提交
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    e.preventDefault();
-                    submitSuggestion();
-                }
-            };
 
             // ===== Kimi AI 悬浮球 =====
             const showKimiChat = ref(false);
@@ -1538,12 +1149,7 @@
             ]);
             const kimiInput = ref('');
             const kimiLoading = ref(false);
-            // ❌ 已移除：不保留任何历史消息
-            // const kimiHistory = ref([]);
-
-            // ===== 图片上传相关 =====
-            const kimiPendingImages = ref([]);
-            const kimiImageInput = ref(null);
+            const kimiHistory = ref([]);
 
             const toggleKimiChat = () => {
                 showKimiChat.value = !showKimiChat.value;
@@ -1553,65 +1159,30 @@
                 showKimiChat.value = false;
             };
 
-            const handleKimiImageSelect = (e) => {
-                const files = e.target.files;
-                if (!files) return;
-
-                // 限制单张 5MB
-                const MAX_SIZE = 5 * 1024 * 1024;
-
-                Array.from(files).forEach(file => {
-                    if (!file.type.startsWith('image/')) {
-                        alert('请选择图片文件');
-                        return;
-                    }
-                    if (file.size > MAX_SIZE) {
-                        alert('单张图片大小不能超过 5MB');
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        kimiPendingImages.value.push(event.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                });
-
-                e.target.value = '';
-            };
-
-            const removeKimiImage = (index) => {
-                kimiPendingImages.value.splice(index, 1);
-            };
-
             const sendKimiMessage = async () => {
                 const message = kimiInput.value.trim();
-                const images = [...kimiPendingImages.value];
+                if (!message || kimiLoading.value) return;
 
-                if (!message && images.length === 0) return;
-                if (kimiLoading.value) return;
-
+                // 添加用户消息
                 const now = new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
-
-                kimiMessages.value.push({
-                    role: 'user',
-                    content: message || '[图片]',
-                    images: images,
-                    time: now
-                });
-
+                kimiMessages.value.push({ role: 'user', content: message, time: now });
                 kimiInput.value = '';
-                kimiPendingImages.value = [];
                 kimiLoading.value = true;
 
+                // 构建历史记录
+                const history = kimiHistory.value.map(msg => ({
+                    role: msg.role === 'user' ? 'user' : 'assistant',
+                    content: msg.content
+                }));
+
                 try {
-                    // ❌ 不发送 history，每次请求都是独立的
                     const response = await axios.post('/api/kimi/chat', {
                         message: message,
-                        images: images
-                        // history 参数已移除
+                        history: history
                     });
 
+                    // ✅ 修复：axios 默认把 4xx/5xx 当作错误，但如果后端返回 200 带 success=false，这里处理
+                    // 如果后端返回非 2xx，会进 catch；如果返回 200 但 success=false，在这里处理
                     if (response.data && response.data.success) {
                         const reply = response.data.reply;
                         kimiMessages.value.push({
@@ -1619,8 +1190,15 @@
                             content: reply,
                             time: new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'})
                         });
-                        // ❌ 不保存到历史，每次对话独立
+                        // 保存到历史
+                        kimiHistory.value.push({ role: 'user', content: message });
+                        kimiHistory.value.push({ role: 'ai', content: reply });
+                        // 限制历史长度
+                        if (kimiHistory.value.length > 20) {
+                            kimiHistory.value = kimiHistory.value.slice(-20);
+                        }
                     } else {
+                        // ✅ 修复：后端返回了业务错误（如余额不足）
                         const errorMsg = response.data?.message || '服务暂时不可用，请稍后再试。';
                         kimiMessages.value.push({
                             role: 'ai',
@@ -1629,12 +1207,16 @@
                         });
                     }
                 } catch (error) {
+                    // ✅ 修复：axios 把 HTTP 错误状态码（429, 401, 500 等）当作异常
                     console.error('Kimi 请求失败:', error);
+
                     let errorMsg = '网络连接出现问题，请检查网络后重试。';
 
                     if (error.response) {
+                        // 服务器返回了错误状态码（4xx, 5xx）
                         const status = error.response.status;
                         const data = error.response.data;
+
                         if (status === 429) {
                             errorMsg = 'AI 服务暂时不可用：账户余额不足或请求过于频繁，请联系管理员充值。';
                         } else if (status === 401) {
@@ -1645,8 +1227,10 @@
                             errorMsg = `服务错误 (${status})，请稍后再试。`;
                         }
                     } else if (error.request) {
+                        // 请求发出但没有收到响应（网络问题）
                         errorMsg = '网络连接出现问题，请检查网络后重试。';
                     } else {
+                        // 请求配置出错
                         errorMsg = '请求出错，请刷新页面后重试。';
                     }
 
@@ -1657,6 +1241,7 @@
                     });
                 } finally {
                     kimiLoading.value = false;
+                    // 滚动到底部
                     setTimeout(() => {
                         const msgContainer = document.querySelector('.kimi-chat-messages');
                         if (msgContainer) msgContainer.scrollTop = msgContainer.scrollHeight;
@@ -1680,10 +1265,6 @@
 
             onMounted(async () => {
                 await fetchCurrentUser();
-                if (currentUser.value) {
-                    await fetchUnreadCount();
-                    startUnreadPolling();
-                }
                 await fetchCats();
                 await fetchActiveTasks();
             });
@@ -1692,16 +1273,10 @@
             return {
                 cats, selectedCatId, catDetail, loading, currentUser, showAuthModal,
                 showDetail, closeDetail, handleFeed,goToCatDetail,
-                unreadCount,
                 activeTasks, selectedTaskId, taskDetail, taskLoading, taskRegisterStatus,
                 showTaskDetail, closeTaskDetail, handleTaskRegister, handleTaskCancel, getTaskCardClass,
-
-                suggestionText, suggestionSubmitting, showSuggestionToast, suggestionToastMessage,
-                submitSuggestion, handleSuggestionKeydown,
-
-                showKimiChat, kimiMessages, kimiInput, kimiLoading, kimiPendingImages, kimiImageInput,
+                showKimiChat, kimiMessages, kimiInput, kimiLoading,
                 toggleKimiChat, closeKimiChat, sendKimiMessage, sendQuickQuestion, handleKimiKeydown,
-                handleKimiImageSelect, removeKimiImage,
             };
         }
     }).mount('#app');

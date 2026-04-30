@@ -54,7 +54,7 @@ import com.example.demo.entity.*;
 public class Mytest {
     
     @Autowired
-    private Service testService;  // ← 改为接口，不是 MessageServiceImpl
+    private UserService testService;  // ← 改为接口，不是 MessageServiceImpl
 
 
 

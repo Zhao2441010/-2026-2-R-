@@ -37,12 +37,12 @@ public class TUServiceImpl implements TUService {
 
     @Override
     public List<TU> findTUByUserId(Long uid) {
-        return List.of();
+        return tuRepository.findByuid(uid);
     }
 
     @Override
     public List<TU> findTUByTaskId(Long tid) {
-        return List.of();
+        return tuRepository.findBytid(tid);
     }
 
 

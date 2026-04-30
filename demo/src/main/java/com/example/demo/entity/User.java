@@ -1,12 +1,20 @@
 package com.example.demo.entity;
 
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
+
 @Entity
 @DiscriminatorValue("USER")
-//标识实体类和鉴别列即可
+public class User extends Person {
 
-public class User extends Person{
+    @Column(name = "last_upload_date")
+    private LocalDate lastUploadDate;
+
+    @Column(name = "daily_upload_count")
+    private Integer dailyUploadCount = 0;
 
     protected User() {
     }
@@ -15,13 +23,36 @@ public class User extends Person{
         super(username, realname, gender, age, phoneNumber, address);
     }
 
-    public User(String username, String gender, String phonenumber,String password){
+    public User(String username, String gender, String phonenumber, String password) {
         this.setUsername(username);
         this.setGender(gender);
         this.setPassword(password);
         this.setPhoneNumber(phonenumber);
     }
 
+    // ========== 新增 getter/setter ==========
+    public LocalDate getLastUploadDate() {
+        return lastUploadDate;
+    }
+
+    public void setLastUploadDate(LocalDate lastUploadDate) {
+        this.lastUploadDate = lastUploadDate;
+    }
+
+    public Integer getDailyUploadCount() {
+        return dailyUploadCount;
+    }
+
+    public void setDailyUploadCount(Integer dailyUploadCount) {
+        this.dailyUploadCount = dailyUploadCount;
+    }
+
+    // 辅助方法：检查是否是 ADMIN
+    public boolean isAdmin() {
+        return this instanceof Admin;
+    }
+
+    // 原有方法...
     public void setUsername(String username) {
         super.setUsername(username);
     }
@@ -56,13 +87,11 @@ public class User extends Person{
     }
 
     @Override
-    public Long getId(){
+    public Long getId() {
         return super.getId();
     }
 
     public String getPassword() {
         return super.getPassword();
     }
-    
 }
-

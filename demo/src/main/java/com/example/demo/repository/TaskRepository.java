@@ -37,5 +37,11 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("select t from Task t order by t.eventdate desc")
     public List<Task> findAllEvent();
 
+    @Query("select count(t) from Task t")
+    public Long countTaskNums();
+
+
     Task findById(Long id);
+
+
 }

@@ -6,6 +6,7 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -29,6 +30,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void updateUploadStats(Long uid, LocalDate date, int count) {
+        userRepository.updateUploadStats(uid, date, count);
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(User user) {
+        Long id=user.getId();
+        userRepository.updateUsernameInfoByUid(id,user.getUsername());
+        userRepository.updateRealnameInfoByUid(id,user.getRealname());
+        userRepository.updateAgeInfoByUid(id,user.getAge());
+        userRepository.updateGenderInfoByUid(id,user.getGender());
+        userRepository.updateAddressInfoByUid(id,user.getAddress());
+        
+    }
+
+    @Override
     public User getUserById(Long id) {
         return userRepository.getUserById(id);
     }
@@ -46,8 +65,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByPhonenumber(String phonenumber) {
         User u=userRepository.getUserByPhoneNumber(phonenumber);
-        if(u!=null){return true;}
-        return false;
+        return(u!=null);
+
     }
 
 

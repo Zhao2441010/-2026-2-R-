@@ -124,6 +124,77 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Map<String, Object>> updateUser(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> request,
+            HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        // 1. 检查登录状态
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            response.put("success", false);
+            response.put("message", "未登录");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        // 2. 权限校验：只能修改自己的信息，ADMIN 可以修改任意用户
+        boolean isAdmin = currentUser instanceof Admin;
+        if (!isAdmin && !currentUser.getId().equals(id)) {
+            response.put("success", false);
+            response.put("message", "无权修改他人信息");
+            return ResponseEntity.status(403).body(response);
+        }
+
+        // 3. 根据ID从数据库查询用户
+        User targetUser = userService.getUserById(id);
+        if (targetUser == null) {
+            response.put("success", false);
+            response.put("message", "用户不存在");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // 4. 获取并验证参数
+        String username = (String) request.get("username");
+        String realname = (String) request.get("realname");
+        String gender = (String) request.get("gender");
+        Integer age = request.get("age") != null ? Integer.valueOf(request.get("age").toString()) : null;
+        String address = (String) request.get("address");
+
+        // 基础校验
+        if (username == null || username.trim().isEmpty()) {
+            response.put("success", false);
+            response.put("message", "用户名不能为空");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try {
+            // 5. 更新用户信息（根据ID更新，手机号不可修改）
+            targetUser.setUsername(username);
+            if (realname != null) targetUser.setRealname(realname);
+            if (gender != null) targetUser.setGender(gender);
+            if (age != null) targetUser.setAge(age);
+            if (address != null) targetUser.setAddress(address);
+
+            // 保存到数据库
+            userService.updateUser(targetUser);
+
+            // 6. 如果修改的是当前登录用户，同步更新 Session
+            if (currentUser.getId().equals(id)) {
+                session.setAttribute("currentUser", targetUser);
+            }
+
+            response.put("success", true);
+            response.put("message", "修改成功");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "修改失败：" + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
     /**
      * 获取当前登录用户
      * GET /api/user/current
@@ -151,6 +222,7 @@ public class UserController {
         response.put("address", user.getAddress());
         response.put("realname", user.getRealname());
         response.put("role", role);           // ← 新增：返回角色
+        response.put("dailyUploadCount",user.getDailyUploadCount());
         return ResponseEntity.ok(response);
     }
 

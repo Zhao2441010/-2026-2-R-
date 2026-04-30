@@ -43,6 +43,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
+    public void updateTask(Long id, String description, Date eventDate, Long need) {
+        Task task = taskRepository.findById(id);
+        if (task != null) {
+            task.setDescription(description);
+            task.setEventdate(eventDate);
+            task.setNeed(need);
+            taskRepository.save(task);
+        }
+    }
+
+    @Override
     public List<Task> querryAllEvent() {
         return taskRepository.findAllEvent();
     }
@@ -86,6 +98,11 @@ public class TaskServiceImpl implements TaskService {
         Date today = new Date();
         today.setTime(today.getTime()-1*60*60*1000);
         return taskRepository.findActiveEvent(today);
+    }
+
+    @Override
+    public Long countAll(){
+        return taskRepository.countTaskNums();
     }
 
 }

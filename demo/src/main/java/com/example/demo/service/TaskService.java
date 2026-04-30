@@ -15,6 +15,8 @@ public interface TaskService {
 
     public void updateEvemtTime(Long id, Date newDate);
 
+    void updateTask(Long id, String description, Date eventDate, Long need);
+
     public void deleteEvent(Long id);
 
     public List<Task> querryAllEvent();
@@ -30,4 +32,8 @@ public interface TaskService {
     public List<Task> findTop10Active();
 
     public List<Task> findActive();
+
+    public Long countAll();
+
+
 }

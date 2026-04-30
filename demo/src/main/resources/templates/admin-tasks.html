@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务管理 - 管理员</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .header h1 { font-size: 24px; color: #1a1a2e; }
+        .btn-primary { background: #4f46e5; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background: #4338ca; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .task-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.2s; position: relative; border: 2px solid transparent; }
+        .task-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border-color: #4f46e5; }
+        .task-card.ended { opacity: 0.7; background: #f8f9fa; }
+        .task-card.ended::after { content: "已结束"; position: absolute; top: 12px; right: 12px; background: #6b7280; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        .task-card.full:not(.ended)::after { content: "已满员"; position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        .task-title { font-size: 16px; font-weight: 600; color: #1f2937; margin-bottom: 12px; padding-right: 60px; }
+        .task-meta { display: flex; flex-direction: column; gap: 8px; color: #6b7280; font-size: 14px; }
+        .task-meta-item { display: flex; align-items: center; gap: 8px; }
+        .task-meta-item .icon { width: 16px; text-align: center; }
+        .progress-bar { width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; margin-top: 12px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #4f46e5; border-radius: 3px; transition: width 0.3s; }
+        .progress-fill.full { background: #ef4444; }
+        .progress-text { font-size: 12px; color: #6b7280; margin-top: 4px; text-align: right; }
+        .context-menu { position: fixed; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); padding: 6px 0; min-width: 160px; z-index: 1000; display: none; }
+        .context-menu-item { padding: 10px 16px; cursor: pointer; font-size: 14px; color: #374151; transition: background 0.15s; }
+        .context-menu-item:hover { background: #f3f4f6; }
+        .context-menu-item.danger { color: #dc2626; }
+        .context-menu-item.danger:hover { background: #fef2f2; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 16px; width: 90%; max-width: 500px; max-height: 90vh; overflow: hidden; animation: modalSlide 0.3s ease; }
+        @keyframes modalSlide { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+        .modal-header h2 { font-size: 18px; color: #1f2937; }
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; }
+        .btn-secondary { background: white; color: #374151; border: 1px solid #d1d5db; padding: 8px 20px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary:hover { background: #f9fafb; }
+        .loading { text-align: center; padding: 60px; color: #6b7280; }
+        .empty-state { text-align: center; padding: 80px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📋 任务管理</h1>
+        <button class="btn-primary" onclick="openCreateModal()"><span>+</span> 新增任务</button>
+    </div>
+    <div id="taskGrid" class="task-grid"><div class="loading">加载中...</div></div>
+</div>
+<div id="contextMenu" class="context-menu">
+    <div class="context-menu-item" onclick="viewDetail()">查看详情</div>
+    <div class="context-menu-item danger" onclick="deleteTask()">删除任务</div>
+</div>
+<div id="createModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header"><h2>新增任务</h2></div>
+        <div class="modal-body">
+            <div class="form-group"><label>任务描述</label><textarea id="newDescription" placeholder="请输入任务描述..."></textarea></div>
+            <div class="form-group"><label>活动日期</label><input type="date" id="newEventDate"></div>
+            <div class="form-group"><label>需求人数</label><input type="number" id="newNeed" min="1" value="1"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeCreateModal()">取消</button>
+            <button class="btn-primary" onclick="submitCreate()">确认创建</button>
+        </div>
+    </div>
+</div>
+<script>
+    let tasks = [], selectedTaskId = null;
+    async function loadTasks() {
+        try {
+            const res = await fetch('/api/admin/tasks/list');
+            tasks = await res.json();
+            renderTasks();
+        } catch (err) { document.getElementById('taskGrid').innerHTML = '<div class="empty-state">加载失败，请刷新重试</div>'; }
+    }
+    function renderTasks() {
+        const grid = document.getElementById('taskGrid');
+        if (tasks.length === 0) { grid.innerHTML = '<div class="empty-state"><p>暂无生效任务</p></div>'; return; }
+        grid.innerHTML = tasks.map(task => {
+            const progress = Math.min((task.currentNum / task.need) * 100, 100);
+            const isFull = task.currentNum >= task.need;
+            return `<div class="task-card ${task.ended ? 'ended' : ''} ${isFull && !task.ended ? 'full' : ''}" data-id="${task.tid}" onclick="location.href='/admin-taskdetail.html?tid=${task.tid}'" oncontextmenu="showContextMenu(event, ${task.tid})">
+                    <div class="task-title">${escapeHtml(task.description)}</div>
+                    <div class="task-meta">
+                        <div class="task-meta-item"><span class="icon">📅</span><span>${task.eventDate}</span></div>
+                        <div class="task-meta-item"><span class="icon">👥</span><span>需求 ${task.need} 人</span></div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill ${isFull ? 'full' : ''}" style="width: ${progress}%"></div></div>
+                    <div class="progress-text">${task.currentNum} / ${task.need} 人已报名</div>
+                </div>`;
+        }).join('');
+    }
+    function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+    function showContextMenu(e, tid) { e.preventDefault(); e.stopPropagation(); selectedTaskId = tid; const menu = document.getElementById('contextMenu'); menu.style.display = 'block'; menu.style.left = e.pageX + 'px'; menu.style.top = e.pageY + 'px'; }
+    document.addEventListener('click', () => { document.getElementById('contextMenu').style.display = 'none'; });
+    function viewDetail() { if (selectedTaskId) location.href = `/admin-taskdetail.html?tid=${selectedTaskId}`; }
+    async function deleteTask() {
+        if (!selectedTaskId) return;
+        const task = tasks.find(t => t.tid === selectedTaskId);
+        const msg = task.ended ? '该任务已过期，删除将保留报名记录。确认删除？' : '该任务未过期，删除将通知已报名用户并清除报名记录。确认删除？';
+        if (!confirm(msg)) return;
+        try {
+            const res = await fetch(`/api/admin/tasks/${selectedTaskId}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) { alert(data.message); loadTasks(); } else { alert(data.message || '删除失败'); }
+        } catch (err) { alert('删除失败: ' + err.message); }
+    }
+    function openCreateModal() { document.getElementById('createModal').classList.add('active'); document.getElementById('newEventDate').valueAsDate = new Date(); }
+    function closeCreateModal() { document.getElementById('createModal').classList.remove('active'); document.getElementById('newDescription').value = ''; document.getElementById('newNeed').value = '1'; }
+    async function submitCreate() {
+        const description = document.getElementById('newDescription').value.trim();
+        const eventDate = document.getElementById('newEventDate').value;
+        const need = parseInt(document.getElementById('newNeed').value);
+        if (!description || !eventDate) { alert('请填写完整信息'); return; }
+        try {
+            const res = await fetch('/api/admin/tasks/create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ description, eventDate, need }) });
+            const data = await res.json();
+            if (data.success) { alert(data.message); closeCreateModal(); loadTasks(); } else { alert(data.message || '创建失败'); }
+        } catch (err) { alert('创建失败: ' + err.message); }
+    }
+    loadTasks();
+</script>
+</body>
+</html>

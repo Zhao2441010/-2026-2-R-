@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫咪详情管理 - HZAU 管理后台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* 无权限页面 */
+        .no-auth-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .no-auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .no-auth-box h2 { color: #e74c3c; margin-bottom: 16px; }
+        .no-auth-box p { color: #666; margin-bottom: 24px; }
+        .no-auth-box a {
+            display: inline-block;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* 管理后台 */
+        .admin-container { display: none; min-height: 100vh; }
+        .admin-header {
+            background: white;
+            padding: 0 40px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .admin-header .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .admin-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #666;
+            font-size: 14px;
+        }
+        .logout-btn {
+            padding: 6px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 6px;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { background: #e0e0e0; }
+
+        .admin-main {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .page-header h1 {
+            font-size: 24px;
+            color: #1a1a2e;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: #f5f5f5;
+            border-color: #667eea;
+        }
+
+        /* 两栏布局 */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        /* 卡片通用样式 */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #f0f0f0;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #1a1a2e;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f5f5f5;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus { border-color: #667eea; }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        .save-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 图片管理区域 */
+        .default-image-preview {
+            width: 100%;
+            height: 280px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f0f0f0;
+            margin-bottom: 24px;
+            border: 2px dashed #e0e0e0;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .upload-area input[type="file"] {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .upload-text {
+            color: #666;
+            font-size: 14px;
+        }
+        .upload-text span {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        /* 图片列表 */
+        .pictures-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .picture-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .picture-item:hover { border-color: #667eea; }
+        .picture-item.is-default { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.2); }
+        .picture-item.is-default::after {
+            content: '默认';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .picture-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        .picture-actions {
+            display: flex;
+            gap: 4px;
+            padding: 8px;
+            background: #fafafa;
+        }
+        .pic-btn {
+            flex: 1;
+            padding: 6px 4px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .pic-btn-display {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        .pic-btn-display.hidden {
+            background: #f0f0f0;
+            color: #999;
+        }
+        .pic-btn-default {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .pic-btn-delete {
+            background: #fee;
+            color: #e74c3c;
+        }
+        .pic-btn:hover { opacity: 0.8; }
+
+        .empty-pics {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f0f0f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 16px 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 300;
+            animation: slideIn 0.3s ease-out;
+        }
+        .toast.show { display: flex; }
+        .toast.success { border-left: 4px solid #2ecc71; }
+        .toast.error { border-left: 4px solid #e74c3c; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .detail-layout { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .admin-main { padding: 20px; }
+            .card { padding: 20px; }
+        }
+    </style>
+    <base target="_blank">
+</head>
+<body>
+
+<!-- 无权限页面 -->
+<div class="no-auth-container" id="noAuthPage">
+    <div class="no-auth-box">
+        <h2>⚠️ 无权限访问</h2>
+        <p>您需要管理员身份才能访问此页面</p>
+        <a href="/admin.html">前往登录</a>
+    </div>
+</div>
+
+<!-- 管理后台 -->
+<div class="admin-container" id="adminPage">
+    <header class="admin-header">
+        <div class="logo" onclick="location.href='admin.html'">
+            <span>🐾</span>
+            <span>HZAU 管理后台</span>
+        </div>
+        <div class="user-info">
+            <span id="adminName">管理员</span>
+            <button class="logout-btn" onclick="doLogout()">退出登录</button>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <div class="page-header">
+            <h1 id="pageTitle">🐱 猫咪详情</h1>
+            <button class="back-btn" onclick="location.href='admin-cats.html'">
+                ← 返回列表
+            </button>
+        </div>
+
+        <div class="detail-layout" id="detailLayout">
+            <!-- 左侧：基本信息 -->
+            <div class="card">
+                <h2>📋 基本信息</h2>
+                <form id="catForm" onsubmit="saveCatInfo(event)">
+                    <input type="hidden" id="catId">
+
+                    <div class="form-group">
+                        <label>猫咪名称 *</label>
+                        <input type="text" id="catName" required placeholder="请输入猫咪名称">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>年龄</label>
+                            <input type="number" id="catAge" min="0" placeholder="请输入年龄">
+                        </div>
+                        <div class="form-group">
+                            <label>品种 *</label>
+                            <input type="text" id="catType" required placeholder="如：橘猫、狸花猫">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>健康状态</label>
+                        <input type="text" id="catHealth" placeholder="如：健康、生病、康复中">
+                    </div>
+
+                    <div class="form-group">
+                        <label>默认展示图片 URL</label>
+                        <input type="text" id="catImage" placeholder="/picture/xxx.jpg" readonly style="background: #f5f5f5;">
+                        <small style="color: #999; font-size: 12px;">在右侧图片管理中设置默认图片</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="checkbox-group">
+                                <input type="checkbox" id="catJueyu">
+                                <span>已绝育</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-group">
+                                <input type="checkbox" id="catFeed">
+                                <span>需要投喂</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="save-btn" id="saveBtn">💾 保存修改</button>
+                </form>
+            </div>
+
+            <!-- 右侧：图片管理 -->
+            <div class="card">
+                <h2>🖼️ 图片管理</h2>
+
+                <!-- 当前默认图片预览 -->
+                <img id="defaultPreview" class="default-image-preview"
+                     src="/picture/default-cat.jpg" alt="默认图片">
+
+                <!-- 上传区域 -->
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" accept="image/*" onchange="uploadImage(event)">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">点击或拖拽上传图片<br><span>支持 JPG、PNG 格式</span></div>
+                </div>
+
+                <!-- 图片列表 -->
+                <div id="picturesContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>加载图片中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <span id="toastIcon"></span>
+    <span id="toastMsg"></span>
+</div>
+
+<script>
+    let currentCatId = null;
+    let currentCat = null;
+    let currentPictures = [];
+
+    window.onload = function() {
+        // 从URL获取catId
+        const params = new URLSearchParams(window.location.search);
+        currentCatId = params.get('id');
+
+        if (!currentCatId) {
+            showToast('❌', '缺少猫咪ID参数', 'error');
+            setTimeout(() => location.href = 'admin-cats.html', 1500);
+            return;
+        }
+
+        checkAdminAuth();
+    };
+
+    // 检查管理员权限
+    async function checkAdminAuth() {
+        try {
+            const response = await fetch('/api/user/current', { credentials: 'include' });
+            if (!response.ok) throw new Error('未登录');
+            const user = await response.json();
+
+            if (user && user.role === 'ADMIN') {
+                document.getElementById('adminName').textContent = user.username || '管理员';
+                showAdmin();
+                loadCatDetail();
+                loadPictures();
+            } else {
+                showNoAuth();
+            }
+        } catch (error) {
+            showNoAuth();
+        }
+    }
+
+    function showAdmin() {
+        document.getElementById('noAuthPage').style.display = 'none';
+        document.getElementById('adminPage').style.display = 'block';
+    }
+
+    function showNoAuth() {
+        document.getElementById('noAuthPage').style.display = 'flex';
+        document.getElementById('adminPage').style.display = 'none';
+    }
+
+    // 加载猫咪详情
+    async function loadCatDetail() {
+        try {
+            const response = await fetch(`/api/admin/cats/${currentCatId}`, { credentials: 'include' });
+            if (!response.ok) throw new Error('获取猫咪信息失败');
+
+            const cat = await response.json();
+            currentCat = cat;
+
+            // 填充表单
+            document.getElementById('catId').value = cat.id;
+            document.getElementById('catName').value = cat.name || '';
+            document.getElementById('catAge').value = cat.age != null ? cat.age : '';
+            document.getElementById('catType').value = cat.type || '';
+            document.getElementById('catHealth').value = cat.health || '';
+            document.getElementById('catImage').value = cat.image || '';
+            document.getElementById('catJueyu').checked = cat.jueyu || false;
+            document.getElementById('catFeed').checked = cat.feed || false;
+
+            // 更新页面标题
+            document.getElementById('pageTitle').textContent = `🐱 ${cat.name || '猫咪'} 的详情`;
+
+            // 更新默认图片预览
+            updateDefaultPreview(cat.image);
+        } catch (error) {
+            showToast('❌', error.message, 'error');
+        }
+    }
+
+    // 加载图片列表
+    async function loadPictures() {
+        const container = document.getElementById('picturesContainer');
+        try {
+            const response = await fetch(`/api/pictures/cat/${currentCatId}`, { credentials: 'include' });
+            if (!response.ok) throw new Error('获取图片失败');
+
+            const pictures = await response.json();
+            currentPictures = pictures;
+
+            if (!pictures || pictures.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-pics">
+                        <div style="font-size: 48px; margin-bottom: 12px;">🖼️</div>
+                        <p>暂无图片，请上传</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = pictures.map(pic => {
+                const isDefault = currentCat && currentCat.image === pic.url;
+                return `
+                    <div class="picture-item ${isDefault ? 'is-default' : ''}" data-pic-id="${pic.id}">
+                        <img src="${pic.url}" alt="猫咪图片" onerror="this.src='/picture/default-cat.jpg'">
+                        <div class="picture-actions">
+                            <button class="pic-btn pic-btn-display ${pic.display ? '' : 'hidden'}"
+                                    onclick="toggleDisplay(${pic.id}, ${!pic.display})"
+                                    title="${pic.display ? '点击隐藏' : '点击显示'}">
+                                ${pic.display ? '👁️ 显示' : '🚫 隐藏'}
+                            </button>
+                            <button class="pic-btn pic-btn-default"
+                                    onclick="setDefaultImage('${pic.url}')"
+                                    ${isDefault ? 'disabled style="opacity:0.5"' : ''}>
+                                ⭐ 默认
+                            </button>
+                            <button class="pic-btn pic-btn-delete" onclick="deletePicture(${pic.id})">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `<div class="pictures-list">${html}</div>`;
+        } catch (error) {
+            container.innerHTML = `<div class="empty-pics"><p>加载图片失败: ${error.message}</p></div>`;
+        }
+    }
+
+    // 更新默认图片预览
+    function updateDefaultPreview(url) {
+        const preview = document.getElementById('defaultPreview');
+        preview.src = url || '/picture/default-cat.jpg';
+    }
+
+    // 保存猫咪基本信息
+    async function saveCatInfo(event) {
+        event.preventDefault();
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = '保存中...';
+
+        try {
+            const catData = {
+                name: document.getElementById('catName').value.trim(),
+                age: parseInt(document.getElementById('catAge').value) || 0,
+                type: document.getElementById('catType').value.trim(),
+                health: document.getElementById('catHealth').value.trim(),
+                image: document.getElementById('catImage').value.trim(),
+                jueyu: document.getElementById('catJueyu').checked,
+                feed: document.getElementById('catFeed').checked
+            };
+
+            const response = await fetch(`/api/admin/cats/${currentCatId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(catData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                showToast('✅', '猫咪信息已更新', 'success');
+                currentCat = { ...currentCat, ...catData };
+            } else {
+                throw new Error(result.message || '保存失败');
+            }
+        } catch (error) {
+            showToast('❌', error.message || '保存失败', 'error');
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 保存修改';
+        }
+    }
+
+    // 切换图片显示状态
+    async function toggleDisplay(picId, display) {
+        try {
+            const response = await fetch(`/api/pictures/${picId}/display`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ display: display })
+            });
+
+            if (!response.ok) throw new Error('操作失败');
+
+            showToast('✅', display ? '图片已设置为显示' : '图片已设置为隐藏', 'success');
+            loadPictures(); // 刷新列表
+        } catch (error) {
+            showToast('❌', error.message, 'error');
+        }
+    }
+
+    // 设置默认展示图片
+    async function setDefaultImage(url) {
+        try {
+            const response = await fetch(`/api/admin/cats/${currentCatId}/image`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ image: url })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                document.getElementById('catImage').value = url;
+                updateDefaultPreview(url);
+                currentCat.image = url;
+                showToast('✅', '默认图片已更新', 'success');
+                loadPictures(); // 刷新列表高亮
+            } else {
+                throw new Error(result.message || '设置失败');
+            }
+        } catch (error) {
+            showToast('❌', error.message, 'error');
+        }
+    }
+
+    // 删除图片
+    async function deletePicture(picId) {
+        if (!confirm('确定要删除这张图片吗？')) return;
+
+        try {
+            const response = await fetch(`/api/pictures/${picId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('删除失败');
+
+            // 如果删除的是当前默认图片，清空默认图片
+            const pic = currentPictures.find(p => p.id === picId);
+            if (pic && currentCat && currentCat.image === pic.url) {
+                document.getElementById('catImage').value = '';
+                updateDefaultPreview('');
+            }
+
+            showToast('🗑️', '图片已删除', 'success');
+            loadPictures();
+        } catch (error) {
+            showToast('❌', error.message, 'error');
+        }
+    }
+
+    // 获取 CSRF token 的辅助函数
+    function getCsrfToken() {
+        // Spring Security 默认将 CSRF token 放在名为 XSRF-TOKEN 的 cookie 中
+        const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    // ========== 修复：上传函数，正确处理 multipart/form-data 和 CSRF ==========
+    async function uploadImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            showToast('❌', '请选择图片文件', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('catId', currentCatId);
+
+        // 获取 CSRF token
+        const csrfToken = getCsrfToken();
+        const headers = {};
+        if (csrfToken) {
+            headers['X-XSRF-TOKEN'] = csrfToken;
+        }
+        // ========== 修复：不要手动设置 Content-Type，让浏览器自动添加 boundary ==========
+        // 手动设置 Content-Type: multipart/form-data 会导致 boundary 缺失
+
+        try {
+            const response = await fetch('/api/pictures/upload', {
+                method: 'POST',
+                credentials: 'include',
+                headers: headers,
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                showToast('✅', '图片上传成功', 'success');
+                loadPictures();
+                if (currentPictures.length === 0 && result.url) {
+                    setDefaultImage(result.url);
+                }
+            } else {
+                throw new Error(result.message || '上传失败');
+            }
+        } catch (error) {
+            showToast('❌', error.message || '上传失败', 'error');
+        } finally {
+            event.target.value = '';
+        }
+    }
+
+    // 退出登录
+    async function doLogout() {
+        try {
+            await fetch('/api/user/logout', { method: 'POST', credentials: 'include' });
+        } catch (error) {
+            console.error('退出失败:', error);
+        } finally {
+            location.href = '/index.html';
+        }
+    }
+
+    // 工具函数
+    function showToast(icon, msg, type) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastIcon').textContent = icon;
+        document.getElementById('toastMsg').textContent = msg;
+        toast.className = `toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+</script>
+</body>
+</html>

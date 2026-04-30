@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息盒 - 校园猫咪</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 顶部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+        }
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 筛选器 */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* 消息列表 */
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .message-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .message-item.unread {
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff5f5 100%);
+            border-left: 4px solid #ff4757;
+        }
+        .message-item.read {
+            opacity: 0.85;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .message-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .unread-dot {
+            width: 10px;
+            height: 10px;
+            background: #ff4757;
+            border-radius: 50%;
+            flex-shrink: 0;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .message-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        .message-content {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .message-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .msg-btn {
+            padding: 6px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .btn-mark-read {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-mark-read:hover {
+            opacity: 0.9;
+        }
+        .btn-delete {
+            background: #f0f0f0;
+            color: #666;
+        }
+        .btn-delete:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .empty-state h3 {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* 加载中 */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+
+        /* 未登录提示 */
+        .login-tip {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .login-tip h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        .btn-login {
+            padding: 12px 40px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <!-- 顶部导航 -->
+        <div class="header">
+            <div class="header-left">
+                <a href="/index.html" class="back-btn">←</a>
+                <div class="header-title">📬 消息盒</div>
+            </div>
+            <div v-if="currentUser" style="color: #666; font-size: 0.9rem;">
+                共 {{ totalCount }} 条消息 · 未读 {{ unreadCount }} 条
+            </div>
+        </div>
+
+        <!-- 未登录提示 -->
+        <div v-if="!currentUser" class="login-tip">
+            <div class="icon">🔒</div>
+            <h3>请先登录查看消息</h3>
+            <a href="/login.html" class="btn-login">去登录</a>
+        </div>
+
+        <template v-else>
+            <!-- 筛选器 -->
+            <div class="filter-bar">
+                <button
+                        class="filter-btn"
+                        :class="{ active: filter === 'all' }"
+                        @click="setFilter('all')">
+                    全部 ({{ totalCount }})
+                </button>
+                <button
+                        class="filter-btn"
+                        :class="{ active: filter === 'unread' }"
+                        @click="setFilter('unread')">
+                    未读 ({{ unreadCount }})
+                </button>
+                <button
+                        class="filter-btn"
+                        :class="{ active: filter === 'read' }"
+                        @click="setFilter('read')">
+                    已读 ({{ readCount }})
+                </button>
+            </div>
+
+            <!-- 加载中 -->
+            <div v-if="loading" class="loading">加载中...</div>
+
+            <!-- 空状态 -->
+            <div v-else-if="messages.length === 0" class="empty-state">
+                <div class="icon">📭</div>
+                <h3>暂无消息</h3>
+                <p>当有新消息时，会在这里显示</p>
+            </div>
+
+            <!-- 消息列表 -->
+            <div v-else class="message-list">
+                <div
+                        v-for="msg in messages"
+                        :key="msg.id"
+                        class="message-item"
+                        :class="msg.seen ? 'read' : 'unread'"
+                        @click="!msg.seen && markAsRead(msg.id)">
+
+                    <div class="message-header">
+                        <div class="message-title-row">
+                            <span v-if="!msg.seen" class="unread-dot"></span>
+                            <span style="font-weight: 600; color: #333;">系统消息</span>
+                        </div>
+                        <span class="message-time">{{ formatTime(msg.time) }}</span>
+                    </div>
+
+                    <div class="message-content">{{ msg.content }}</div>
+
+                    <div class="message-actions" @click.stop>
+                        <button
+                                v-if="!msg.seen"
+                                class="msg-btn btn-mark-read"
+                                @click="markAsRead(msg.id)">
+                            标记已读
+                        </button>
+                        <button
+                                class="msg-btn btn-delete"
+                                @click="deleteMessage(msg.id)">
+                            删除
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+        setup() {
+            const currentUser = ref(null);
+            const messages = ref([]);
+            const loading = ref(false);
+            const filter = ref('all');
+
+            const fetchCurrentUser = async () => {
+                try {
+                    const response = await axios.get('/api/user/current', { withCredentials: true });
+                    if (response.data && response.data.success && response.data.username) {
+                        currentUser.value = response.data;
+                    }
+                } catch (error) {
+                    currentUser.value = null;
+                }
+            };
+
+            const fetchMessages = async () => {
+                if (!currentUser.value) return;
+                loading.value = true;
+                try {
+                    const response = await axios.get(`/api/messages/list?status=${filter.value}`, { withCredentials: true });
+                    if (response.data.success) {
+                        messages.value = response.data.data;
+                    }
+                } catch (error) {
+                    console.error('获取消息失败:', error);
+                    if (error.response?.status === 401) {
+                        currentUser.value = null;
+                    }
+                } finally {
+                    loading.value = false;
+                }
+            };
+
+            const markAsRead = async (id) => {
+                try {
+                    await axios.post(`/api/messages/${id}/read`, {}, { withCredentials: true });
+                    const msg = messages.value.find(m => m.id === id);
+                    if (msg) msg.seen = true;
+                    await fetchMessages(); // 刷新列表
+                } catch (error) {
+                    alert('标记已读失败');
+                }
+            };
+
+            const deleteMessage = async (id) => {
+                if (!confirm('确定要删除这条消息吗？')) return;
+                try {
+                    await axios.delete(`/api/messages/${id}`, { withCredentials: true });
+                    messages.value = messages.value.filter(m => m.id !== id);
+                } catch (error) {
+                    alert('删除失败');
+                }
+            };
+
+            const setFilter = (f) => {
+                filter.value = f;
+                fetchMessages();
+            };
+
+            const formatTime = (timeStr) => {
+                if (!timeStr) return '';
+                const date = new Date(timeStr);
+                const now = new Date();
+                const diff = now - date;
+
+                // 小于1小时显示"X分钟前"
+                if (diff < 3600000) {
+                    const mins = Math.floor(diff / 60000);
+                    return mins < 1 ? '刚刚' : `${mins}分钟前`;
+                }
+                // 小于24小时显示"X小时前"
+                if (diff < 86400000) {
+                    return `${Math.floor(diff / 3600000)}小时前`;
+                }
+                // 小于7天显示"X天前"
+                if (diff < 604800000) {
+                    return `${Math.floor(diff / 86400000)}天前`;
+                }
+
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            const unreadCount = computed(() => {
+                return messages.value.filter(m => !m.seen).length;
+            });
+
+            const readCount = computed(() => {
+                return messages.value.filter(m => m.seen).length;
+            });
+
+            const totalCount = computed(() => {
+                return messages.value.length;
+            });
+
+            onMounted(async () => {
+                await fetchCurrentUser();
+                if (currentUser.value) {
+                    await fetchMessages();
+                }
+            });
+
+            return {
+                currentUser,
+                messages,
+                loading,
+                filter,
+                unreadCount,
+                readCount,
+                totalCount,
+                setFilter,
+                markAsRead,
+                deleteMessage,
+                formatTime
+            };
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
